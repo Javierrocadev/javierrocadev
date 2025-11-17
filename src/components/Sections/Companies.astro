@@ -1,0 +1,74 @@
+---
+const clients = [
+  { 
+    name: "Google (Simulado)", 
+    href: "#", 
+    bgColor: "bg-black", 
+    textColor: "text-white",
+    mobileClasses: 'translate-x-[-15%] rotate-[-5deg] z-30', 
+  },
+  { 
+    name: "Astro (Simulado)", 
+    href: "#", 
+    bgColor: "bg-black", 
+    textColor: "text-white",
+    mobileClasses: 'translate-y-[10%] rotate-[5deg] z-20',
+  },
+  { 
+    name: "Tailwind CSS (Simulado)", 
+    href: "#", 
+    bgColor: "bg-black", 
+    textColor: "text-white",
+    mobileClasses: 'translate-x-[15%] rotate-[-2deg] z-10',
+  },
+];
+---
+
+<section class="bg-white text-black py-16 md:py-24 px-6 lg:px-4">
+  <div class="mx-auto">
+    <div class="text-center mb-16 w-full">
+      <p class="text-body font-light max-w-2xl mx-auto">
+        He creado componentes y soluciones de diseño para diferentes proyectos, enfocando siempre la solución en la experiencia de usuario.
+      </p>
+    </div>
+
+    <div class="relative flex flex-col items-center md:grid md:grid-cols-12 md:gap-x-6 md:gap-y-6">
+      {clients.map((client, index) => (
+        <div 
+          class={`
+            w-11/12
+            md:col-span-4 md:w-full
+            
+            relative block md:relative 
+            
+            // Clases de superposición y rotación solo en mobile
+            ${client.mobileClasses} md:translate-x-0 md:translate-y-0 md:rotate-0 md:z-auto
+            
+            // Margen negativo solo para mobile, reset en desktop
+            ${index === 0 ? 'mb-0 md:mb-0' : ''}
+            ${index === 1 ? '-mt-20 mb-0 md:mt-0 md:mb-0' : ''}
+            ${index === 2 ? '-mt-20 md:mt-0' : ''}
+          `}
+        >
+          <a 
+            href={client.href} 
+            class={`${client.bgColor} flex flex-col items-center justify-center 
+                   aspect-video w-full overflow-hidden rounded-xl p-6 md:p-10
+                   group transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl`}
+            target="_blank" 
+            rel="noreferrer noopener"
+          >
+            <div class={`flex flex-col items-center justify-center ${client.textColor}`}>
+              <!-- SVG simple para todos los iconos -->
+              <svg class="w-12 h-12 mb-3" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+              
+              <span class="text-body-sm text-center font-normal">{client.name}</span>
+            </div>
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
