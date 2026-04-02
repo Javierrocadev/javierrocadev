@@ -7,184 +7,99 @@ const t = useTranslations(lang);
 
 <section class="bg-white text-gray-900 py-20 px-6 lg:px-10 flex flex-col">
   <div class="max-w-xl mb-12">
-    <h2 class="text-3xl font-light mb-4">Diseñando el recorrido del usuario</h2>
+    <h2 class="text-3xl font-light mb-4">{t('userJourney.title')}</h2>
     <p class="text-lg font-light text-gray-600">
-      Antes de abrir Figma o escribir una línea de código, necesito entender el viaje que hará cada persona en el sitio. ¿Qué busca? ¿Dónde puede perderse? ¿Qué acción quiero que realice?
+      {t('userJourney.desc')}
     </p>
   </div>
 
   <div
     class="w-full h-fit flex flex-col gap-8 justify-center items-center bg-gray-100/50 rounded-xl py-12 sm:p-12 border border-gray-200"
   >
-    <!-- Contenedor del User Journey Interactivo -->
-    <div class="w-full max-w-4xl relative" id="user-journey">
-      <!-- Línea de progreso animada -->
-      <svg class="w-full h-2 mb-8" viewBox="0 0 800 8" preserveAspectRatio="none">
-        <path
-          id="journey-path"
-          d="M 0 4 L 800 4"
-          stroke="#e5e7eb"
-          stroke-width="4"
-          fill="none"
-        />
-        <path
-          id="journey-progress"
-          d="M 0 4 L 800 4"
-          stroke="url(#gradient)"
-          stroke-width="4"
-          fill="none"
-          stroke-dasharray="800"
-          stroke-dashoffset="800"
-          class="transition-all duration-1000 ease-out"
-        />
-        <defs>
-          <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-      </svg>
+    <!-- CAMBIAR ESTO-->
+<div class="w-full max-w-5xl relative" id="user-journey">
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-6 relative mx-2">
+        
+        <div class="journey-node group cursor-crosshair" data-step="0">
+          <div class="relative h-52 bg-white border border-slate-200 rounded-xl p-6 transition-all duration-300 hover:border-slate-400 hover:shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+              <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">{t('userJourney.step')} 01</span>
+              <div class="h-2 w-2 rounded-full bg-slate-200 group-hover:bg-slate-500 transition-colors duration-300"></div>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-700 mb-4 transition-colors group-hover:text-slate-900">{t('userJourney.step1')}</h3>
+            <div class="space-y-2">
+              <div class="bg-slate-50 border border-slate-100 rounded-md px-3 py-1.5">
+                <p class="text-[11px] text-slate-500 font-medium">{t('userJourney.step1.1')}</p>
+              </div>
+              <div class="bg-slate-50 border border-slate-100 rounded-md px-3 py-1.5">
+                <p class="text-[11px] text-slate-500 font-medium">{t('userJourney.step1.2')}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <!-- Nodos del Journey -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 relative">
-  <!-- Nodo 1: Landing -->
-  <div
-    class="journey-node relative text-primary h-52 overflow-hidden rounded-2xl group cursor-pointer"
-    data-step="0"
-    style="background: linear-gradient(135deg, rgb(0, 29, 161) 0%, #152d43 100%);"
-  >
-    <div
-      class="absolute inset-3 z-[1] flex flex-col items-start justify-between rounded-xl bg-[#f6f3f4] p-5 text-white border-2 border-white/20"
-    >
-      <div class="flex justify-between items-start w-full">
-        <div class="text-left">
-          <p class="text-2xl font-bold mb-1 text-primary">Landing</p>
+        <div class="journey-node group cursor-crosshair" data-step="1">
+          <div class="relative h-52 bg-white border border-slate-200 rounded-xl p-6 transition-all duration-300 hover:border-slate-400 hover:shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+              <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">{t('userJourney.step')} 02</span>
+              <div class="h-2 w-2 rounded-full bg-slate-200 group-hover:bg-slate-500 transition-colors duration-300"></div>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-700 mb-4 transition-colors group-hover:text-slate-900">{t('userJourney.step2')}</h3>
+            <div class="space-y-2">
+              <div class="bg-slate-50 border border-slate-100 rounded-md px-3 py-1.5">
+                <p class="text-[11px] text-slate-500 font-medium">{t('userJourney.step2.1')}</p>
+              </div>
+              <div class="bg-slate-50 border border-slate-100 rounded-md px-3 py-1.5">
+                <p class="text-[11px] text-slate-500 font-medium">{t('userJourney.step2.2')}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="h-2 w-2 rounded-full bg-primary"></div>
-      </div>
 
-      <div class="w-full space-y-2 text-primary">
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-black/20">
-          <p class="text-xs ">Captar atención</p>
+        <div class="journey-node group cursor-crosshair" data-step="2">
+          <div class="relative h-52 bg-white border border-slate-200 rounded-xl p-6 transition-all duration-300 hover:border-slate-400 hover:shadow-sm">
+            <div class="flex justify-between items-center mb-6">
+              <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">{t('userJourney.step')} 03</span>
+              <div class="h-2 w-2 rounded-full bg-slate-200 group-hover:bg-slate-500 transition-colors duration-300"></div>
+            </div>
+            <h3 class="text-lg font-semibold text-slate-700 mb-4 transition-colors group-hover:text-slate-900">{t('userJourney.step3')}</h3>
+            <div class="space-y-2">
+              <div class="bg-slate-50 border border-slate-100 rounded-md px-3 py-1.5">
+                <p class="text-[11px] text-slate-500 font-medium">{t('userJourney.step3.1')}</p>
+              </div>
+              <div class="bg-slate-50 border border-slate-100 rounded-md px-3 py-1.5">
+                <p class="text-[11px] text-slate-500 font-medium">{t('userJourney.step3.2')}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-black/20">
-          <p class="text-xs ">3 segundos</p>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- Nodo 2: Explorar -->
-  <div
-    class="journey-node relative h-52 overflow-hidden rounded-2xl group cursor-pointer"
-    data-step="1"
-    style="background: linear-gradient(135deg, #667eea 0%, rgb(21 45 67) 100%);"
-  >
-    <div
-      class="absolute inset-3 z-[1] flex flex-col items-start justify-between rounded-xl bg-[#1a1a1a] p-5 text-white border-2 border-white/20"
-    >
-      <div class="flex justify-between items-start w-full">
-        <div class="text-left">
-          <p class="text-2xl font-bold mb-1">Explorar</p>
+        <div class="journey-node group cursor-crosshair" data-step="3">
+          <div class="relative h-52 bg-primary border border-slate-800 rounded-xl p-6 transition-all duration-300 hover:bg-slate-900">
+            <div class="flex justify-between items-center mb-6">
+              <span class="text-[10px] font-bold tracking-widest text-slate-500 uppercase transition-colors group-hover:text-slate-400">{t('userJourney.step')} 04</span>
+              <div class="h-2 w-2 rounded-full bg-slate-600 group-hover:bg-slate-100 transition-colors duration-300"></div>
+            </div>
+            <h3 class="text-lg font-semibold text-white mb-4">{t('userJourney.step4')}</h3>
+            <div class="space-y-2">
+              <div class="bg-slate-700/50 border border-slate-600/50 rounded-md px-3 py-1.5">
+                <p class="text-[11px] text-slate-300 font-medium">{t('userJourney.step4.1')}</p>
+              </div>
+              <div class="bg-slate-700/50 border border-slate-600/50 rounded-md px-3 py-1.5">
+                <p class="text-[11px] text-slate-300 font-medium">{t('userJourney.step4.2')}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="h-2 w-2 rounded-full bg-white/50"></div>
-      </div>
 
-      <div class="w-full space-y-2">
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
-          <p class="text-xs text-gray-300">Navegación clara</p>
-        </div>
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
-          <p class="text-xs text-gray-300">Contenido organizado</p>
-        </div>
       </div>
     </div>
   </div>
 
-  <!-- Nodo 3: Interacción -->
-  <div
-    class="journey-node relative h-52 overflow-hidden rounded-2xl group cursor-pointer"
-    data-step="2"
-    style="background: linear-gradient(135deg, #667eea 0%, rgb(21 45 67) 100%);"
-  >
-    <div
-      class="absolute inset-3 z-[1] flex flex-col items-start justify-between rounded-xl bg-[#1a1a1a] p-5 text-white border-2 border-white/20"
-    >
-      <div class="flex justify-between items-start w-full">
-        <div class="text-left">
-          <p class="text-2xl font-bold mb-1">Interacción</p>
-        </div>
-        <div class="h-2 w-2 rounded-full bg-white/50"></div>
-      </div>
-
-      <div class="w-full space-y-2">
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
-          <p class="text-xs text-gray-300">Micro-interacciones</p>
-        </div>
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
-          <p class="text-xs text-gray-300">Feedback visual</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Nodo 4: Conversión -->
-  <div
-    class="journey-node relative h-52 overflow-hidden rounded-2xl group cursor-pointer"
-    data-step="3"
-    style="background: linear-gradient(135deg, #667eea 0%, rgb(21 45 67) 100%);"    
-  >
-    <div
-      class="absolute inset-3 z-[1] flex flex-col items-start justify-between rounded-xl bg-[#1a1a1a] p-5 text-white border-2 border-white/20"
-    >
-      <div class="flex justify-between items-start w-full">
-        <div class="text-left">
-          <p class="text-2xl font-bold mb-1">Conversión</p>
-        </div>
-        <div class="h-2 w-2 rounded-full bg-white/50"></div>
-      </div>
-
-      <div class="w-full space-y-2">
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
-          <p class="text-xs text-gray-300">CTA clara</p>
-        </div>
-        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 border border-white/20">
-          <p class="text-xs text-gray-300">Proceso simple</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-    </div>
-  </div>
-
-  <div class="max-w-xl mx-auto my-20">
+  <div class="max-w-xl mx-auto mt-40 ">
     <p class="text-lg font-light text-gray-600 text-center">
-      Este mapa me permite diseñar con propósito. Cada botón, cada sección, cada animación tiene una razón de ser dentro del flujo completo.
+      {t('userJourney.final')}
     </p>
   </div>
 </section>
-
-<script>
-  // Animación de la línea de progreso cuando los nodos entran en hover
-  const nodes = document.querySelectorAll('.journey-node');
-  const progressLine = document.getElementById('journey-progress');
-
-  nodes.forEach((node, index) => {
-    node.addEventListener('mouseenter', () => {
-      const progress = ((index + 1) / nodes.length) * 800;
-      if (progressLine) {
-        progressLine.style.strokeDashoffset = `${800 - progress}`;
-      }
-    });
-  });
-
-  // Animación automática al cargar la página
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      if (progressLine) {
-        progressLine.style.strokeDashoffset = '0';
-      }
-    }, 500);
-  });
-</script>

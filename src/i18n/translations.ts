@@ -66,7 +66,24 @@ export const translations = {
     "designProcess.uiDesign": "Diseño de interfaces",
     "designProcess.codeImplementation": "Implementación en código",
     "designProcess.responsiveDesign": "Diseño responsive"
-  },
+    ,
+    "userJourney.title": "Diseñando el recorrido del usuario",
+    "userJourney.desc": "Antes de abrir Figma o escribir una línea de código, necesito entender el viaje que hará cada persona en el sitio. ¿Qué busca? ¿Dónde puede perderse? ¿Qué acción quiero que realice?",
+    "userJourney.step1": "Landing",
+    "userJourney.step1.1": "Captar atención",
+    "userJourney.step1.2": "3 segundos",
+    "userJourney.step2": "Explorar",
+    "userJourney.step2.1": "Navegación clara",
+    "userJourney.step2.2": "Contenido organizado",
+    "userJourney.step3": "Interacción",
+    "userJourney.step3.1": "Micro-interacciones",
+    "userJourney.step3.2": "Feedback visual",
+    "userJourney.step4": "Conversión",
+    "userJourney.step4.1": "CTA clara",
+    "userJourney.step4.2": "Proceso simple",
+    "userJourney.final": "Este mapa me permite diseñar con propósito. Cada botón, cada sección, cada animación tiene una razón de ser dentro del flujo completo.",
+    "userJourney.step":"Paso "
+ },
   en: {
     "nav.home": "Home",
     "nav.about": "About",
@@ -127,5 +144,22 @@ export const translations = {
     "designProcess.uiDesign": "UI Design",
     "designProcess.codeImplementation": "Code Implementation",
     "designProcess.responsiveDesign": "Responsive Design"
+    ,
+    "userJourney.title": "Designing the user journey",
+    "userJourney.desc": "Before opening Figma or writing a line of code, I need to understand the journey each person will take on the site. What are they looking for? Where might they get lost? What action do I want them to take?",
+    "userJourney.step1": "Landing",
+    "userJourney.step1.1": "Catch attention",
+    "userJourney.step1.2": "3 seconds",
+    "userJourney.step2": "Explore",
+    "userJourney.step2.1": "Clear navigation",
+    "userJourney.step2.2": "Organized content",
+    "userJourney.step3": "Interaction",
+    "userJourney.step3.1": "Micro-interactions",
+    "userJourney.step3.2": "Visual feedback",
+    "userJourney.step4": "Conversion",
+    "userJourney.step4.1": "Clear CTA",
+    "userJourney.step4.2": "Simple process",
+    "userJourney.final": "This map allows me to design with purpose. Every button, every section, every animation has a reason within the complete flow.",
+    "userJourney.step":"Step "
   }
 } as const;
