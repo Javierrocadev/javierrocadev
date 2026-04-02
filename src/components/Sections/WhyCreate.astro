@@ -1,0 +1,78 @@
+---
+// src/components/AwardsSection.astro
+
+import Stack from "../../assets/images/stack-3.svg";
+import AWS from "../../assets/images/brand-aws.svg";
+import Azure from "../../assets/images/brand-azure.svg";
+import Trophy from "../../assets/images/trophy.svg";
+import Award from "../../assets/images/award.svg";
+
+// 1. Definición de los datos
+const awardsData = [
+  { title: "AWS Developer", year: "2027", Icon: AWS, colorClass: "stroke-white" },
+  { title: "Azure Developer", year: "2025", Icon: Azure, colorClass: "fill-sky-400 stroke-sky-400" },
+  { title: "Power Platform Developer", year: "2024", Icon: Stack, colorClass: "fill-white" },
+  { title: "2º - Logo 'Aula diseño'", year: "2017", Icon: Award, colorClass: "fill-amber-300" },
+  { title: "First Lego League UK", year: "2017", Icon: Award, colorClass: "fill-amber-300" },
+  { title: "First Lego League Navarra", year: "2016", Icon: Trophy, colorClass: "fill-amber-300" },
+  { title: "1º - First Lego League Madrid", year: "2016", Icon: Trophy, colorClass: "fill-amber-300" },
+];
+// Componente auxiliar para un premio/certificado (opcional, pero ayuda a la claridad)
+// Nota: en Astro, no puedes definir un componente funcional dentro del Frontmatter y usarlo
+// como una función de React, por lo que integramos la lógica de iteración directamente abajo.
+
+---
+<div
+  class="relative p-0.5 h-full overflow-hidden rounded-2xl bg-[#3d3c3d] drop-shadow-xl group"
+>
+  <div
+    class="h-full px-6 py-8 sm:px-8 z-[1] flex flex-col items-start gap-4 rounded-[calc(1.5rem-0.5px)] bg-[#323132] text-white opacity-90"
+  >
+    <div class="mb-4">
+      <h2 class="text-2xl sm:text-3xl font-medium mb-1">Premios & Certificados</h2>
+      <p class="text-sm text-neutral-400">Mis logros académicos y profesionales.</p>
+    </div>
+    
+    <div class="flex flex-col space-y-1 w-full">
+      {awardsData.map((award, index) => (
+        <div key={index} style={`margin-left: ${index * 3}px;`} class="group/award duration-300 transition-all">
+          <div
+            class="
+              flex justify-between items-center gap-4 p-3 
+              
+              /* CAMBIO CLAVE: Padding Vertical reducido a py-3 */
+              py-3 rounded-md transition-all duration-300
+              transform translate-x-0 
+              
+              hover:scale-[1.01] hover:bg-white
+              cursor-pointer
+            "
+          >
+            <p class="text-base text-white group-hover/award:text-neutral-800">
+              {award.title} 
+              <span class="text-xs inline text-neutral-400 group-hover/award:text-neutral-600">
+                ({award.year})
+              </span>
+            </p>
+            
+            <div class="w-5 h-5 flex-shrink-0">
+              <award.Icon 
+                class={`
+                  ${award.colorClass} 
+                  transition-colors duration-300 
+                  group-hover/award:fill-neutral-800 
+                  group-hover/award:stroke-neutral-800
+                `} 
+              />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <div
+    class="absolute transition-all duration-500 top-1/2 -left-1/2 group-hover:top-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-amber-800 blur-[50px]"
+  >
+  </div>
+</div>

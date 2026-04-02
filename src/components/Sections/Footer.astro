@@ -1,0 +1,126 @@
+---
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+import { useTranslations } from '../../i18n/utils';
+const t = useTranslations(lang);
+---
+<style>
+.container-pattern {
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(to bottom, 
+      rgba(255, 255, 255, 1) 0%, 
+      rgba(255, 255, 255, 0) 70%),
+    repeating-radial-gradient(#f3f5f0 80%, #d7e3fc 90%, #b6b6bb 90%);
+  background-size: 100% 100%, 65px 65px;
+  background-position: 0 0, 0 0;
+}
+</style>
+<section class="container-pattern pt-64 pb-10 px-6 lg:px-10 bg-neutral-800 group">
+  <div class="max-w-7xl ">
+    <div class="md:max-w-[45%] w-full">
+<h1 class="text-h1 font-light leading-[120%] text-primary">
+  {t('footer.title.part1')}
+  <span class="text-primary/70">{t('footer.title.highlight')}</span>{t('footer.title.part2')}
+</h1>
+      <div class="mb-8 mt-4 flex items-center gap-2">
+        <p class="text-lg font-light text-primary">{t('footer.text')}</p>
+        <div class="flex gap-2">
+          <a href="https://www.linkedin.com/in/javierrocap/">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-brand-linkedin hover:stroke-sky-700"
+              ><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
+                d="M8 11v5"></path><path d="M8 8v.01"></path><path d="M12 16v-5"
+              ></path><path d="M16 16v-3a2 2 0 1 0 -4 0"></path><path
+                d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4l0 -10"
+              ></path></svg
+            >
+          </a>
+          <a href="mailto:javierroca.dev@gmail.com">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-mail hover:stroke-sky-700"
+              ><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
+                d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"
+              ></path><path d="M3 7l9 6l9 -6"></path></svg
+            >
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="w-full flex justify-end">
+    <button
+      onclick="window.open('https://www.linkedin.com/in/javierrocap/', '_blank')"
+      class="border text-gray-50 duration-900 relative group cursor-pointer overflow-hidden h-fit w-56 rounded-md bg-orange-50 p-2 font-extrabold group-hover:bg-neutral-800"
+    >
+      <!-- Divs de burbujas con z-index bajo -->
+      <div
+        class="absolute group-hover:-top-1 group-hover:-right-2 w-16 h-16 rounded-full group-hover:scale-150 duration-700 right-12 top-12 group-hover:blur-sm bg-sky-800 z-0 mobile-bubble-1"
+      >
+      </div>
+      <div
+        class="absolute group-hover:-top-1 group-hover:-right-2 w-12 h-12 rounded-full group-hover:scale-150 duration-700 right-20 -top-6 group-hover:blur-sm bg-sky-800 z-0 mobile-bubble-2"
+      >
+      </div>
+      <div
+        class="absolute group-hover:-top-1 group-hover:-right-2 w-8 h-8 rounded-full group-hover:scale-150 duration-700 right-32 top-6 group-hover:blur-sm bg-sky-800 z-0 mobile-bubble-3"
+      >
+      </div>
+      <div
+        class="absolute group-hover:-top-1 group-hover:-right-2 w-4 h-4 rounded-full group-hover:scale-150 duration-700 right-2 top-12 group-hover:blur-sm bg-sky-700 z-0 mobile-bubble-4"
+      >
+      </div>
+
+      <!-- Flecha con z-index alto -->
+      <div class="relative inline-block">
+        <svg
+          class="w-28 h-auto mt-4 fill-[#323132] group-hover:fill-white z-10 relative group-hover:translate-x-6 transition-all duration-700 mobile-arrow"
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="icon icon-tabler icons-tabler-filled icon-tabler-arrow-big-right-lines"
+          ><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
+            d="M12.089 3.634a2 2 0 0 0 -1.089 1.78l-.001 2.585l-1.999 .001a1 1 0 0 0 -1 1v6l.007 .117a1 1 0 0 0 .993 .883l1.999 -.001l.001 2.587a2 2 0 0 0 3.414 1.414l6.586 -6.586a2 2 0 0 0 0 -2.828l-6.586 -6.586a2 2 0 0 0 -2.18 -.434l-.145 .068z"
+          ></path><path
+            d="M3 8a1 1 0 0 1 .993 .883l.007 .117v6a1 1 0 0 1 -1.993 .117l-.007 -.117v-6a1 1 0 0 1 1 -1z"
+          ></path><path
+            d="M6 8a1 1 0 0 1 .993 .883l.007 .117v6a1 1 0 0 1 -1.993 .117l-.007 -.117v-6a1 1 0 0 1 1 -1z"
+          ></path></svg
+        >
+        <div
+          class="custom-shadows absolute w-2 rounded-2xl h-8 top-14 -left-1 bg-white z-20 opacity-0 group-hover:translate-x-6 group-hover:opacity-100 transition-all duration-700 mobile-shadow"
+        >
+        </div>
+      </div>
+    </button>
+  </div>
+  <footer class=" text-center mt-24 text-sm text-gray-500">
+ 
+2026  &copy; Javierrocadev 
+
+</footer>
+</section>

@@ -35,7 +35,347 @@
   --color-grey2: rgb(204 204 204);
   --color-black: rgb(0 0 0);
   --color-white: rgb(255 255 255);
+  --color-primary: rgb(21 45 67);
+  --menu-fg-secondary: #4A5565;
+  --hamburger-icon-border: #E5E7EB;
+  --fg: #000000;
+  --menu-bg:#F3F4F6;
 }
 html {
   font-family: "Raleway", sans-serif;
+  scroll-behavior: smooth;
 }
+
+
+
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100svh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 90;
+}
+
+.menu-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: all;
+
+  z-index: 90;
+}
+ @media (max-width: 600px) {
+
+  .menu-bar {
+    padding: 2rem 1rem;
+  }
+  }
+
+
+.menu-logo-flex span {
+  font-size: 1.5rem;
+}
+.menu-logo-flex{
+  display: inline-flex;
+  justify-self: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.menu-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.menu-toggle-label {
+  overflow: hidden;
+}
+
+.menu-toggle-label p {
+  position: relative;
+  transform: translateY(0%);
+  will-change: transform;
+}
+
+.menu-hamburger-icon {
+  position: relative;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid var(--hamburger-icon-border);
+  border-radius: 100%;
+}
+
+.menu-hamburger-icon span {
+  position: absolute;
+  width: 15px;
+  height: 1.25px;
+  background-color: var(--fg);
+  transition: all 0.75s cubic-bezier(0.87, 0, 0.13, 1);
+  transform-origin: center;
+  will-change: transform;
+}
+
+.menu-hamburger-icon span:nth-child(1) {
+  transform: translateY(-3px);
+}
+
+.menu-hamburger-icon span:nth-child(2) {
+  transform: translateY(3px);
+}
+
+.menu-hamburger-icon.active span:nth-child(1) {
+  transform: translateY(0) rotate(45deg) scaleX(1.05);
+}
+
+.menu-hamburger-icon.active span:nth-child(2) {
+  transform: translateY(0) rotate(-45deg) scaleX(1.05);
+}
+
+.menu-overlay,
+.menu-overlay-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100svh;
+  color: var(--fg);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.menu-overlay {
+  background-color: var(--menu-bg);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+  will-change: clip-path;
+}
+
+.menu-overlay-content {
+  display: flex;
+  transform: translateY(-50%);
+  will-change: transform;
+  pointer-events: all;
+}
+
+.menu-media-wrapper {
+  flex: 2;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.menu-media-wrapper img {
+  opacity: 0.25;
+}
+
+.menu-content-wrapper {
+  flex: 3;
+  position: relative;
+  display: flex;
+}
+
+.menu-content-main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.menu-footer {
+  margin: 0 auto;
+}
+
+.menu-content-main,
+.menu-footer {
+  width: 75%;
+  padding: 2rem;
+  display: flex;
+  align-items: flex-end;
+  gap: 2rem;
+}
+
+.menu-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.menu-col:nth-child(1) {
+  flex: 3;
+}
+
+.menu-col:nth-child(2) {
+  flex: 2;
+}
+
+.menu-link a {
+  font-size: 3.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  color: var(--fg);
+}
+
+.menu-tag a,
+.menu-footer p {
+  color: var(--menu-fg-secondary);
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.line {
+  position: relative;
+  will-change: transform;
+}
+
+@media (max-width: 1000px) {
+  h1 {
+    font-size: 3rem;
+    letter-spacing: -0.05rem;
+  }
+
+  section h1 {
+    width: 100%;
+  }
+
+  .menu-media-wrapper {
+    display: none;
+  }
+
+  .menu-content-main,
+  .menu-footer {
+    width: 100%;
+  }
+
+  .menu-content-main {
+    top: 50%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5rem;
+  }
+
+  .menu-link a {
+    font-size: 3rem;
+    text-decoration: none;
+  color: var(--fg);
+  
+  font-weight: 500;
+  }
+
+  .menu-tag a {
+    font-size: 1.25rem;
+    text-decoration: none;
+  color: var(--fg);
+  
+  font-weight: 500;
+  }
+}
+.loader {
+      display: block;     
+      height: auto;
+      overflow: visible;
+      position: relative;
+      margin-bottom: 6px;
+    }
+.path {
+      fill: none;
+    }
+    .loader .dash .path {
+      stroke: rgba(17, 16, 16, 0.1);
+      
+      stroke-linecap: round;
+      pathLength: 360;
+    }
+    .logopr .path {
+      fill:transparent;
+      transition: fill 0.6s ease;
+    }
+    .logocontainer:hover .path:not(.dash-normal):not(.dash-reverse) {
+  fill: rgba(252, 228, 228, 0.7);
+}
+    .loader:hover line {
+      stroke: rgba(10, 24, 33, 0.6);
+     
+      stroke-linecap: round;
+      pathLength: 360;
+    }
+  .loader line,
+.loader circle {
+  transition: opacity 0.6s ease;
+}
+
+.logocontainer:hover line,
+.logocontainer:hover circle {
+  opacity: 0;
+   transition: opacity 2s ease;
+  stroke: rgba(214, 225, 233, 0.6);
+}
+
+    /* Normal direction (left to right) */
+    .dash-normal {
+      animation: dashArray 7s ease-in-out infinite,
+                 dashOffset 7s linear infinite;
+    }
+
+    /* Reversed direction (right to left) */
+    .dash-reverse {
+       /* Different color for contrast */
+      animation: dashArray 7s ease-in-out infinite,
+                 dashOffsetReverse 7s linear infinite;
+    }
+    /* 
+.dash-normal {
+      animation: dashArray 7s ease-in-out infinite,
+                 dashOffset 3s linear infinite;
+    }
+
+    
+    .dash-reverse {
+    
+      animation: dashArray 5s ease-in-out infinite,
+                 dashOffsetReverse 7s linear infinite;
+    }*/
+    @keyframes dashArray {
+      0% {
+        stroke-dasharray: 0 1 359 0;
+      }
+      50% {
+        stroke-dasharray: 0 359 1 0;
+        
+      }
+      100% {
+        stroke-dasharray: 359 1 0 0;
+      }
+    }
+
+    @keyframes dashOffset {
+      0% {
+        stroke-dashoffset: -5;
+      }
+      100% {
+        stroke-dashoffset: -365;
+      }
+    }
+
+    @keyframes dashOffsetReverse {
+      0% {
+        stroke-dashoffset: 365;
+      }
+      100% {
+        stroke-dashoffset: 5;
+      }
+    }

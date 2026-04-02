@@ -1,0 +1,265 @@
+---
+import Comp1 from "/public/images/component1.png";
+import Comp2 from "/public/images/component2.png";
+import Comp3 from "/public/images/component3.gif";
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+import { useTranslations } from '../../i18n/utils';
+const t = useTranslations(lang);
+---
+
+<section class="bg-white text-gray-900 py-20 px-6 lg:px-10 group/tooltip-container">
+  <div class="mx-auto">
+    <div
+      class="flex flex-col gap-6 xl:flex-row mb-10 md:mb-16 space-y-4 sm:space-y-0"
+    >
+      <div class="max-w-xl">
+        <h2 class="text-3xl font-light mb-4">
+         {t('now.title')} <span
+            class="text-primary/70">{t('now.title2')}</span>{t('now.title3')}<span class="text-primary/70">{t('now.title4')}</span>{t('now.title5')}
+        </h2>
+        <p class="text-lg font-light text-gray-600">
+          {t('now.text')}
+        </p>
+        <a
+  class="
+    text-body-sm 
+    bg-black 
+    text-white 
+    flex 
+    justify-center 
+    items-center 
+    w-fit 
+    sm:w-fit 
+    rounded-2xl 
+    h-12 
+    px-6 
+    mt-6
+    relative 
+    overflow-hidden
+    cursor-pointer 
+    
+    group 
+    duration-500 
+    
+    hover:border-blue-500 
+    hover:duration-500 
+    hover:shadow-sm
+    hover:shadow-blue-500/50
+    
+    after:absolute 
+    after:z-10 
+    after:w-20 
+    after:h-20 
+    after:content-[''] 
+    after:bg-blue-300 
+    after:right-8 
+    after:top-3 
+    after:rounded-full 
+    after:blur-lg 
+    after:duration-500
+    after:transition-all
+    
+    before:absolute 
+    before:w-12 
+    before:h-12 
+    before:content-[''] 
+    before:right-1 
+    before:top-1 
+    before:z-10 
+    before:bg-blue-500 
+    before:rounded-full 
+    before:blur-lg 
+    before:duration-500 
+    before:transition-all
+
+    group-hover:before:duration-500 
+    group-hover:after:duration-500 
+    
+    hover:after:-right-8 
+    hover:before:right-12 
+    hover:before:-bottom-8 
+    hover:before:blur-xl 
+    hover:after:blur-xl
+  "
+        href="/process"
+ >
+  <span class="relative z-20">
+    {t('now.btn')}
+  </span>
+</a>
+      </div>
+      <div class="w-full flex justify-center xl:mt-40 mt-0 sm:mt-20 relative">
+    
+
+
+<div
+  class="relative h-80 w-64 overflow-hidden rounded-xl bg-[#3d3c3d] drop-shadow-xl group"
+>
+  <div
+    class="absolute inset-0.5 z-[1] flex flex-col items-start justify-evenly gap-6 rounded-lg bg-[#323132] p-4 text-white opacity-90"
+  >
+    <div
+      class="h-full w-full overflow-hidden rounded-md bg-white flex justify-center items-center relative before:absolute before:top-1/2 before:-left-48 before:-translate-x-12 before:-translate-y-12 before:w-full before:h-24 before:bg-neutral-100 before:z-10 group-hover:before:left-12 before:transition-all before:duration-700 before:border-y before:border-neutral-200"
+    >
+      <div
+        class="flex z-20 gap-2.5 translate-x-32 group-hover:-translate-x-40 duration-1000 transition-all"
+      >
+        <button
+          class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-800 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
+        >
+          <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+          <svg
+            class="shrink-0 stroke-white"
+            stroke-linejoin="round"
+            stroke-linecap="round"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            viewBox="0 0 24 24"
+            height="24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+            <path d="M5 12l14 0"></path>
+            <path d="M13 18l6 -6"></path>
+            <path d="M13 6l6 6"></path>
+          </svg>
+        </button>
+        <button
+          class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-600 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
+        >
+          <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+          <svg
+            class="shrink-0 stroke-white"
+            stroke-linejoin="round"
+            stroke-linecap="round"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            viewBox="0 0 24 24"
+            height="24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+            <path d="M5 12l14 0"></path>
+            <path d="M13 18l6 -6"></path>
+            <path d="M13 6l6 6"></path>
+          </svg>
+        </button>
+        <div class="relative">
+          <button
+            class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-400 group-hover:bg-sky-700 border-neutral-800 p-2 text-white group-hover:scale-125 duration-1000 transition-all"
+          >
+            <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+            <svg
+              class="shrink-0 stroke-white"
+              stroke-linejoin="round"
+              stroke-linecap="round"
+              stroke-width="2"
+              stroke="currentColor"
+              fill="none"
+              viewBox="0 0 24 24"
+              height="24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+              <path d="M5 12l14 0"></path>
+              <path d="M13 18l6 -6"></path>
+              <path d="M13 6l6 6"></path>
+            </svg>
+          </button>
+
+          <div
+            class="absolute top-4 left-24 duration-700 group-hover:delay-700 transition-all translate-y-28 translate-x-20 group-hover:translate-x-0 group-hover:translate-y-0"
+          >
+            <svg
+              class="w-12 h-12 stroke-amber-300 duration-1000 transition-all group-hover:translate-0 group-hover:delay-1000 group-hover:scale-75"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M3 12l3 0"></path>
+              <path d="M12 3l0 3"></path>
+              <path d="M7.8 7.8l-2.2 -2.2"></path>
+              <path d="M16.2 7.8l2.2 -2.2"></path>
+              <path d="M7.8 16.2l-2.2 2.2"></path>
+              <path d="M12 12l9 3l-4 2l-2 4l-3 -9"></path>
+            </svg>
+          </div>
+        </div>
+        <button
+          class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-600 border-neutral-800 p-2 text-white group-hover:translate-x-4 duration-1000 transition-all"
+        >
+          <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+          <svg
+            class="shrink-0 stroke-white"
+            stroke-linejoin="round"
+            stroke-linecap="round"
+            stroke-width="2"
+            stroke="currentColor"
+            fill="none"
+            viewBox="0 0 24 24"
+            height="24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+            <path d="M5 12l14 0"></path>
+            <path d="M13 18l6 -6"></path>
+            <path d="M13 6l6 6"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="flex justify-between w-full items-center">
+      <div class="">
+        <p class="text-xl font-bold">Buttons</p>
+        <p class="">3 variants</p>
+      </div>
+      <svg
+        class="w-8 h-8 -translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 duration-300 transition-all"
+        stroke-linejoin="round"
+        stroke-linecap="round"
+        stroke-width="2"
+        stroke="currentColor"
+        fill="none"
+        viewBox="0 0 24 24"
+        height="24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+        <path d="M5 12l14 0"></path>
+        <path d="M13 18l6 -6"></path>
+        <path d="M13 6l6 6"></path>
+      </svg>
+    </div>
+  </div>
+  <div
+    class="absolute transition-all duration-500 top-1/2 -left-1/2 group-hover:top-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-amber-800 blur-[50px]"
+  ></div>
+</div>
+
+
+
+
+
+
+      </div>
+    </div>
+  </div>
+</section>

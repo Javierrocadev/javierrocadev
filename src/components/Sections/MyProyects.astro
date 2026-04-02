@@ -1,0 +1,156 @@
+---
+import LogoCard from "./LogoCard.astro";
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+import { useTranslations } from '../../i18n/utils';
+const t = useTranslations(lang);
+
+const projects = [
+  {
+    title: "OPEN SOURCE COMPONENTS",
+    image: { src: "/images/uiversevideocover.jpg", alt: "Uiverse Video Cover" },
+    description: t('projects.carousel'),
+  },
+  {
+    title: "LOGO",
+    description: t('projects.logo'),
+  },
+  {
+    title: "TAILSNIPPETS",
+    image: { src: "/images/tailsnippet.png", alt: "TailSnippets" },
+    description: t('projects.tailSnippets'),
+  },
+  {
+    title: "BENTO PORTFOLIO",
+    image: { src: "/images/bentoportfolio.png", alt: "Bento Portfolio" },
+    description: t('projects.bento'),
+  },
+  {
+    title: "HELPLEO",
+    image: { src: "/images/helpleo.png", alt: "Helpleo" },
+    description: t('projects.helpleo'),
+  },
+];
+
+const projectsData = projects.map((p, i) => ({
+  index: i,
+  title: p.title,
+  hasComponent: p.title === "LOGO",
+  image: p.image || null,
+  description: p.description,
+}));
+---
+
+<section id="projects" class="bg-white text-gray-900 py-20 px-6 lg:px-10">
+  <div class="mx-auto">
+    <div class="flex flex-col gap-16 lg:flex-row items-start mb-10 md:mb-16 space-y-4 sm:space-y-0">
+
+      <!-- LEFT: Títulos -->
+      <div class="max-w-xl" id="project-titles">
+        {projects.map((project, index) => (
+          <h2
+            class={`text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none
+              ${index === 0 ? "font-semibold text-black" : "font-light text-gray-400 hover:text-gray-600"}`}
+            data-index={index}
+            onclick="selectProject(this)"
+          >
+            {project.title}
+          </h2>
+        ))}
+      </div>
+
+      <!-- RIGHT -->
+      <div class="w-full sm:aspect-video aspect-auto rounded-2xl bg-primary/20 overflow-hidden flex items-center justify-center">
+        <div class="min-h-96  relative w-full h-full flex flex-col gap-4 justify-center items-center xl:p-16 p-4">
+
+          <!-- Wrapper que controla el fade de imagen/logo -->
+          <div
+            id="project-visual"
+            class="max-h-[70%] flex items-center justify-center transition-opacity duration-300 ease-in-out"
+          >
+            <!-- Imagen -->
+            <img
+              id="project-image"
+              src={projects[0].image.src}
+              alt={projects[0].image.alt}
+              class="max-h-full object-cover rounded-2xl p-0.5 shadow-[0px_2px_5px_#e1e1e1] hover:shadow-md hover:scale-95 hover:rotate-2 transition-all duration-300"
+            />
+
+            <!-- LogoCard: oculto por defecto -->
+            <div id="project-logocard" class="hidden flex items-center justify-center">
+              <LogoCard />
+            </div>
+          </div>
+
+          <!-- Descripción con fade -->
+          <p
+            id="project-description"
+            class="text-lg font-light text-gray-600 line-clamp-2 text-center transition-opacity duration-300 ease-in-out"
+          >
+            {projects[0].description}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script id="projects-data" type="application/json" set:html={JSON.stringify(projectsData)} />
+
+<script>
+  const projects = JSON.parse(document.getElementById("projects-data").textContent);
+
+  const visualEl      = document.getElementById("project-visual");
+  const imgEl         = document.getElementById("project-image");
+  const logoEl        = document.getElementById("project-logocard");
+  const descriptionEl = document.getElementById("project-description");
+
+  // Duración del fade en ms — debe coincidir con duration-300 de Tailwind (300ms)
+  const FADE_DURATION = 300;
+
+  window.selectProject = function (el) {
+    const index   = Number(el.dataset.index);
+    const project = projects[index];
+
+    // Si ya está seleccionado, no hacer nada
+    if (el.classList.contains("font-semibold")) return;
+
+    // 1) Títulos: activo en negro, resto en gris
+    document.querySelectorAll("#project-titles h2").forEach((h, i) => {
+      h.className = i === index
+        ? "text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none font-semibold text-black"
+        : "text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none font-light text-gray-400 hover:text-gray-600";
+    });
+
+    // 2) Fade out visual + descripción
+    visualEl.classList.add("opacity-0");
+    descriptionEl.classList.add("opacity-0");
+
+    // 3) Tras el fade out, swap de contenido y fade in
+    setTimeout(() => {
+      // Swap imagen / LogoCard
+      imgEl.classList.add("hidden");
+      logoEl.classList.add("hidden");
+
+      if (project.hasComponent) {
+        logoEl.classList.remove("hidden");
+      } else {
+        imgEl.classList.remove("hidden");
+        imgEl.src = project.image.src;
+        imgEl.alt = project.image.alt;
+      }
+
+      // Swap descripción
+      descriptionEl.textContent = project.description;
+
+      // Fade in (se necesita un frame para que el navegador registre el cambio)
+      requestAnimationFrame(() => {
+        visualEl.classList.remove("opacity-0");
+        descriptionEl.classList.remove("opacity-0");
+      });
+    }, FADE_DURATION);
+  };
+</script>

@@ -1,0 +1,217 @@
+---
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+import { useTranslations } from '../../i18n/utils';
+const t = useTranslations(lang);
+
+---
+     <style>
+        /* Estilos Keen Slider Base */
+        .keen-slider {
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+            touch-action: pan-y; /* Permite desplazamiento vertical normal */
+            -webkit-tap-highlight-color: transparent;
+        }
+        .keen-slider__slide {
+            min-width: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Estilos de Botones (Conservando el comportamiento hover/disabled del usuario) */
+        .arrow {
+            transition: background-color 0.2s, color 0.2s, opacity 0.2s;
+            /* Clases directas aplicadas en el HTML: text-black border border-grey2 rounded-full w-10 h-10 flex items-center justify-center */
+        }
+        .arrow:hover:not(:disabled) {
+            background-color: #1f2937; /* hover:bg-black */
+            color: white; /* hover:text-white */
+        }
+        .arrow:disabled {
+            opacity: 0.3; /* disabled:opacity-30 */
+            cursor: not-allowed;
+        }
+
+        /* Aplicación de las clases de borde del usuario (simulando los colores mapeados) */
+        .border-grey-line {
+            border-color: #e5e7eb;
+        }
+
+    </style>
+ <section class="bg-white text-gray-900 py-20  px-6 lg:px-10">
+        <div class="mx-auto">
+            <!-- Título y Navegación del Carrusel -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-16 space-y-4 sm:space-y-0">
+                <div class="max-w-xl">
+                    <!-- Usando clases Tailwind que simulan h4 y body del usuario -->
+                    <h2 class="text-3xl font-light mb-4">{t('carousel.title')}</h2>
+                    <p class="text-lg font-light text-gray-600">
+                       {t('carousel.text')}
+                    </p>
+                </div>
+            
+                <!-- Botones de Navegación del Carrusel -->
+                <div class="flex gap-2.5 mt-4 sm:mt-0">
+                    <button 
+                        id="arrow-left" 
+                        aria-label="Anterior" 
+                        class="arrow text-black border border-grey2 rounded-full w-10 h-10 flex items-center justify-center"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </button>
+                    <button 
+                        id="arrow-right" 
+                        aria-label="Siguiente" 
+                        class="arrow text-black border border-grey2 rounded-full w-10 h-10 flex items-center justify-center"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenedor del Keen Slider -->
+        <div class="overflow-hidden  mx-auto">
+            <div id="keen-slider" class="keen-slider min-h-[120px]">
+                <!-- Slides inyectados por JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Carga de Keen Slider y Lógica JS -->
+ <script type="module">
+    import KeenSlider from 'https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/+esm';
+
+    // 🌟 CORRECCIÓN CLAVE: Definimos las rutas como CADENAS DE TEXTO con ruta ABSOLUTA
+    // Esto funciona porque las imágenes están en la carpeta 'public'.
+    const Component1 = "/images/Comp1.gif";
+    const Component2 = "/images/Comp2.gif";
+    const Component3 = "/images/Comp3.gif";
+    const Component4 = "/images/Comp4.gif";
+    const Component5 = "/images/Comp5.gif";
+    const Component6 = "/images/Comp6.gif";
+    const Component7 = "/images/Comp7.gif";
+    const Component8 = "/images/Comp8.gif";
+    const Component9 = "/images/Comp9.gif";
+    const Component10 = "/images/Comp10.gif";
+    const Component11 = "/images/Comp11.gif";
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const sliderElement = document.getElementById("keen-slider");
+        const arrowLeft = document.getElementById("arrow-left");
+        const arrowRight = document.getElementById("arrow-right");
+
+        if (!sliderElement) return;
+
+      
+        const technologies = [
+            { name: "https://uiverse.io/Javierrocadev/angry-puma-14", icon: Component1 }, // CADENA de texto
+            { name: "https://uiverse.io/Javierrocadev/funny-cobra-5", icon: Component2 }, // CADENA de texto
+            { name: "https://uiverse.io/Javierrocadev/chatty-stingray-29", icon: Component3 },
+            { name: "https://uiverse.io/Javierrocadev/red-stingray-37", icon: Component4 },
+            { name: "https://uiverse.io/Javierrocadev/soft-tiger-98", icon: Component5 },
+            { name: "https://uiverse.io/Javierrocadev/popular-earwig-75", icon: Component6 },
+            { name: "https://uiverse.io/Javierrocadev/bright-turkey-65", icon: Component7 },
+            { name: "https://uiverse.io/profile/Javierrocadev", icon: Component8 },
+            { name: "https://uiverse.io/Javierrocadev/terrible-stingray-70", icon: Component9 },
+            { name: "https://uiverse.io/Javierrocadev/hard-cheetah-69", icon: Component10 },
+            { name: "https://uiverse.io/profile/Javierrocadev", icon: Component11 }
+        ];
+
+        // --- Generación Dinámica de Slides ---
+// --- Generación Dinámica de Slides (Función Corregida) ---
+
+function createSlides(techArray) {
+    return techArray.map(tech => {
+        // Obtenemos la URL de la imagen (asumiendo que tech.icon ya es la URL de la imagen)
+        const imageUrl = tech.icon; 
+        
+        // Define el SVG de la flecha
+        const arrowSvg = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-neutral-100 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
+                <line x1="7" y1="17" x2="17" y2="7"></line>
+                <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+        `;
+
+        // Modificamos el contenedor principal a 'group relative'
+        return `
+            <div class="keen-slider__slide border-r border-grey-line w-full px-4 md:px-8">
+                <div class="relative py-8 px-6 h-full flex flex-col items-center justify-center text-center rounded-xl group overflow-hidden">
+                    
+                    <div 
+                        class="absolute inset-0 duration-1000 opacity-0 transition-all bg-gradient-to-br from-indigo-500 via-pink-500 to-yellow-400 rounded-xl blur-lg filter group-hover:opacity-10 group-hover:duration-200 z-20 pointer-events-none"
+                    ></div>
+
+                    <div class="pointer-events-none absolute top-2 right-2 p-2 bg-neutral-800 rounded-full transition-all duration-300 opacity-0 group-hover:opacity-100 z-10">
+                        ${arrowSvg}
+                    </div>
+
+                    <a href="${tech.name}" target="_blank" rel="noreferrer noopener" class="w-full h-full flex flex-col items-center justify-center relative z-0">
+                        
+                        <div class="mb-3 w-auto h-auto flex items-center justify-center transition-all duration-300">
+                             <img src="${imageUrl}" alt="${tech.name}" class="w-full h-full rounded-xl object-contain group-hover:scale-[1.03] transition-transform duration-300" />
+                        </div>
+                        
+                        </a>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+        sliderElement.innerHTML = createSlides(technologies);
+
+        // --- Inicialización y Lógica de Marquee Continuo ---
+        var animation = { duration: 25000, easing: (t) => t }; 
+
+        const slider = new KeenSlider(
+            sliderElement,
+            {
+                loop: true,
+                drag: false,
+                perView: 2.5, 
+                spacing: 0,
+                breakpoints: {
+                    "(min-width: 768px)": {
+                        slides: { perView: 2, spacing: 0 },
+                    },
+                    "(min-width: 1024px)": {
+                        slides: { perView: 4, spacing: 0 },
+                    },
+                    "(min-width: 1524px)": {
+                        slides: { perView: 6, spacing: 0 },
+                    },
+                },
+                
+                created(s) {
+                    s.moveToIdx(s.track.details.abs + 5, true, animation);
+                },
+                updated(s) {
+                    s.moveToIdx(s.track.details.abs + 5, true, animation);
+                },
+                animationEnded(s) {
+                    s.moveToIdx(s.track.details.abs + 5, true, animation);
+                },
+            }
+        );
+        
+        // Lógica de navegación con botones 
+        if (arrowLeft && slider.track) {
+            arrowLeft.addEventListener("click", () => {
+                slider.moveToIdx(slider.track.details.abs - 1, true, { duration: 500, easing: (t) => t });
+            });
+        }
+        if (arrowRight && slider.track) {
+            arrowRight.addEventListener("click", () => {
+                slider.moveToIdx(slider.track.details.abs + 1, true, { duration: 500, easing: (t) => t });
+            });
+        }
+    });
+</script>

@@ -1,0 +1,50 @@
+---
+import Comp1 from "/public/images/fll1.png";
+import Comp2 from "/public/images/fll2.png";
+import Comp3 from "/public/images/fll3.png";
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const { lang } = Astro.props;
+import { useTranslations } from '../../i18n/utils';
+const t = useTranslations(lang);
+---
+ <section class="bg-white text-gray-900 py-20  px-6 lg:px-10">
+        <div class="mx-auto">
+            <!-- Título y Navegación del Carrusel -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 md:mb-16 space-y-4 sm:space-y-0">
+                <div class="max-w-2xl">
+                    <!-- Usando clases Tailwind que simulan h4 y body del usuario -->
+                    <h2 class="text-3xl font-light mb-4">{t('myStart.title')}</h2>
+                    <p class="text-lg font-light text-gray-600">
+                    {t('myStart.text')}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="w-full flex gap-4 flex-col md:flex-row">
+            <div>
+                <img
+          src={Comp1.src}
+          alt="competicion de lego"
+        />
+            </div>
+            <div class="w-full flex flex-col items-end gap-4">
+                <img
+          src={Comp3.src}
+          alt="competicion de lego"
+          class="w-fit h-fit"
+        />
+        <div class="w-full flex items-center justify-center">
+                <img
+          src={Comp2.src}
+          alt="competicion de lego"
+          class="w-fit h-fit"
+        />
+        </div>
+            </div>
+        </div>
+
+ 
+    </section>

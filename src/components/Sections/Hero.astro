@@ -1,17 +1,24 @@
 ---
+interface Props {
+  lang: 'es' | 'en';
+}
 
+const { lang } = Astro.props;
+import { useTranslations } from '../../i18n/utils';
+const t = useTranslations(lang);
 ---
 
-<section class="pt-48 md:pt-[350px] pb-6 px-6 lg:px-4">
+<section class="pt-48 md:pt-[350px] py-20   px-6 lg:px-10">
   <div class="max-w-7xl ">
 
-    <div class="md:max-w-[75%] w-full">
+    <div class="md:max-w-[65%] w-full">
 
-      <h1 class="text-h1 font-light">
-        El diseño que cobra vida en el navegador. <span class="text-grey2">
-          Desarrollo Front-End & UX/UI, con foco en el rendimiento y la accesibilidad.
-        </span>
+      <h1 class="text-h1 font-light leading-[120%]">
+        <span class="text-primary/90">
+        {t('hero.title')}
+        </span> {t('hero.title2')}
       </h1>
+      <!-- <h2 class="text-h2 font-light mt-6">Ui/Ux - Front-End Developer </h2> -->
     </div>
 
 
@@ -76,12 +83,15 @@
     hover:before:blur-xl 
     hover:after:blur-xl
   "
+  href="#projects"
 >
   <span class="relative z-20">
-    Proyectos
+    {t('hero.projects')}
   </span>
 </a>
 <a
+href="https://www.linkedin.com/in/javierrocap/"
+target="_blank"
   aria-label="Contactar"
   type="button"
   class="
@@ -146,7 +156,7 @@
   "
 >
   <span class="relative z-20">
-    Conectemos...
+    {t('hero.contact')}
   </span>
 </a>
    
@@ -157,7 +167,7 @@
 
 <section class="pb-20">
   <div class="max-w-full mx-auto">
-    <figure class="mx-auto w-full shadow-2xl  overflow-hidden">
+    <figure class="mx-auto w-full overflow-hidden">
 
       <div style="aspect-ratio:16/9" class="h-auto aspect-video w-full relative">
         <img 
@@ -165,6 +175,7 @@
           src="https://jrdevportfolio.vercel.app/_astro/perfil-bg.JZQ4zR22.webp"
           width="100%" 
           alt="Visual principal del portfolio"
+          fetchpriority="high"
         />
 
         <div class="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent"></div>
