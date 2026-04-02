@@ -13,6 +13,7 @@ const projects = [
     title: "OPEN SOURCE COMPONENTS",
     image: { src: "/images/uiversevideocover.jpg", alt: "Uiverse Video Cover" },
     description: t('projects.carousel'),
+    url: "https://uiverse.io/profile/Javierrocadev",
   },
   {
     title: "LOGO",
@@ -22,11 +23,13 @@ const projects = [
     title: "TAILSNIPPETS",
     image: { src: "/images/tailsnippet.png", alt: "TailSnippets" },
     description: t('projects.tailSnippets'),
+    url: "https://tailsnippets.vercel.app/",
   },
   {
     title: "BENTO PORTFOLIO",
     image: { src: "/images/bentoportfolio.png", alt: "Bento Portfolio" },
     description: t('projects.bento'),
+    url: "https://jrdevportfolio.vercel.app/",
   },
   {
     title: "HELPLEO",
@@ -41,6 +44,7 @@ const projectsData = projects.map((p, i) => ({
   hasComponent: p.title === "LOGO",
   image: p.image || null,
   description: p.description,
+  url: p.url || null,
 }));
 ---
 
@@ -64,20 +68,28 @@ const projectsData = projects.map((p, i) => ({
 
       <!-- RIGHT -->
       <div class="w-full sm:aspect-video aspect-auto rounded-2xl bg-primary/20 overflow-hidden flex items-center justify-center">
-        <div class="min-h-96  relative w-full h-full flex flex-col gap-4 justify-center items-center xl:p-16 p-4">
+        <div class="min-h-96 relative w-full h-full flex flex-col gap-4 justify-center items-center xl:p-16 p-4">
 
           <!-- Wrapper que controla el fade de imagen/logo -->
           <div
             id="project-visual"
-            class="max-h-[70%] flex items-center justify-center transition-opacity duration-300 ease-in-out"
+            class="max-h-[70%] w-full flex items-center justify-center transition-opacity duration-300 ease-in-out"
           >
-            <!-- Imagen -->
-            <img
-              id="project-image"
-              src={projects[0].image.src}
-              alt={projects[0].image.alt}
-              class="max-h-full object-cover rounded-2xl p-0.5 shadow-[0px_2px_5px_#e1e1e1] hover:shadow-md hover:scale-95 hover:rotate-2 transition-all duration-300"
-            />
+            <!-- Siempre un <a> fijo; se activa/desactiva según haya URL -->
+            <a
+              id="project-link"
+              href={projects[0].url ?? "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              class={`contents ${!projects[0].url ? "pointer-events-none" : ""}`}
+            >
+              <img
+                id="project-image"
+                src={projects[0].image?.src}
+                alt={projects[0].image?.alt}
+                class="max-h-full object-cover rounded-2xl p-0.5 shadow-[0px_2px_5px_#e1e1e1] hover:shadow-md hover:scale-95 hover:rotate-2 transition-all duration-300"
+              />
+            </a>
 
             <!-- LogoCard: oculto por defecto -->
             <div id="project-logocard" class="hidden flex items-center justify-center">
@@ -105,6 +117,7 @@ const projectsData = projects.map((p, i) => ({
 
   const visualEl      = document.getElementById("project-visual");
   const imgEl         = document.getElementById("project-image");
+  const linkEl        = document.getElementById("project-link");
   const logoEl        = document.getElementById("project-logocard");
   const descriptionEl = document.getElementById("project-description");
 
@@ -131,16 +144,29 @@ const projectsData = projects.map((p, i) => ({
 
     // 3) Tras el fade out, swap de contenido y fade in
     setTimeout(() => {
-      // Swap imagen / LogoCard
+      // Ocultar todo primero
       imgEl.classList.add("hidden");
       logoEl.classList.add("hidden");
 
       if (project.hasComponent) {
+        // Ocultar link y mostrar LogoCard
+        linkEl.classList.add("hidden");
         logoEl.classList.remove("hidden");
       } else {
+        // Mostrar imagen
+        linkEl.classList.remove("hidden");
         imgEl.classList.remove("hidden");
-        imgEl.src = project.image.src;
-        imgEl.alt = project.image.alt;
+        imgEl.src = project.image?.src ?? "";
+        imgEl.alt = project.image?.alt ?? "";
+
+        // Activar o desactivar el enlace según haya URL
+        if (project.url) {
+          linkEl.href = project.url;
+          linkEl.classList.remove("pointer-events-none");
+        } else {
+          linkEl.href = "#";
+          linkEl.classList.add("pointer-events-none");
+        }
       }
 
       // Swap descripción
