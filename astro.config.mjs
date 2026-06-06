@@ -1,11 +1,19 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from "@tailwindcss/vite";
 
-// https://astro.build/config
+import sanity from "@sanity/astro";
+
 export default defineConfig({
   vite: {
-    plugins: [tailwindcss()]
-  }
+    plugins: [tailwindcss()],
+  },
+  integrations: [
+    sanity({
+      projectId: "oq1tmoti",
+      dataset: "production",
+      useCdn: false,
+    }),
+  ],
 });
