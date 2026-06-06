@@ -4,48 +4,51 @@ import Uiverse from "/public/images/uiverse-logo.svg";
 import Relent from "/public/images/relent.svg";
 
 const clients = [
-  { 
-    name: "Google (Simulado)", 
-    href: "#", 
-    bgColor: "bg-black", 
+  {
+    name: "Google (Simulado)",
+    href: "#",
+    bgColor: "bg-black",
     textColor: "text-white",
-    mobileClasses: 'translate-x-[-15%] rotate-[-5deg] z-30', 
-    img: MPI
+    mobileClasses: "translate-x-[-15%] rotate-[-5deg] z-30",
+    img: MPI,
   },
-  { 
-    name: "Astro (Simulado)", 
-    href: "#", 
-    bgColor: "bg-black", 
+  {
+    name: "Astro (Simulado)",
+    href: "#",
+    bgColor: "bg-black",
     textColor: "text-white",
-    mobileClasses: 'translate-y-[10%] rotate-[5deg] z-20',
-     img: Uiverse
+    mobileClasses: "translate-y-[10%] rotate-[5deg] z-20",
+    img: Uiverse,
   },
-  { 
-    name: "Tailwind CSS (Simulado)", 
-    href: "#", 
-    bgColor: "bg-black", 
+  {
+    name: "Tailwind CSS (Simulado)",
+    href: "#",
+    bgColor: "bg-black",
     textColor: "text-white",
-    mobileClasses: 'translate-x-[15%] rotate-[-2deg] z-10',
-    img: Relent
+    mobileClasses: "translate-x-[15%] rotate-[-2deg] z-10",
+    img: Relent,
   },
 ];
 ---
 
 <section class="bg-white text-black py-20 px-6 lg:px-4">
   <div class="mx-auto">
+    <div class="max-w-2xl mb-12 mx-auto text-center">
+      <!-- Usando clases Tailwind que simulan h4 y body del usuario -->
+      <h2 class="text-3xl font-light mb-4">Aportando mi visión</h2>
+      <p class="text-lg font-light text-gray-600">
+        He creado componentes y soluciones de diseño para diferentes proyectos y
+        empresas, enfocando siempre la solución en la experiencia de usuario.
+      </p>
+    </div>
 
-     <div class="max-w-2xl mb-12 mx-auto text-center">
-                    <!-- Usando clases Tailwind que simulan h4 y body del usuario -->
-                    <h2 class="text-3xl font-light mb-4">Aportando mi visión</h2>
-                    <p class="text-lg font-light text-gray-600">
-                     He creado componentes y soluciones de diseño para diferentes proyectos y empresas, enfocando siempre la solución en la experiencia de usuario.  
-                    </p>
-                </div>
-
-    <div class="relative flex flex-col items-center md:grid md:grid-cols-12 md:gap-x-6 md:gap-y-6">
-      {clients.map((client, index) => (
-        <div 
-          class={`
+    <div
+      class="relative flex flex-col items-center md:grid md:grid-cols-12 md:gap-x-6 md:gap-y-6"
+    >
+      {
+        clients.map((client, index) => (
+          <div
+            class={`
             w-11/12
             md:col-span-4 md:w-full
             
@@ -55,28 +58,34 @@ const clients = [
             ${client.mobileClasses} md:translate-x-0 md:translate-y-0 md:rotate-0 md:z-auto
             
             // Margen negativo solo para mobile, reset en desktop
-            ${index === 0 ? 'mb-0 md:mb-0' : ''}
-            ${index === 1 ? '-mt-20 mb-0 md:mt-0 md:mb-0' : ''}
-            ${index === 2 ? '-mt-20 md:mt-0' : ''}
+            ${index === 0 ? "mb-0 md:mb-0" : ""}
+            ${index === 1 ? "-mt-20 mb-0 md:mt-0 md:mb-0" : ""}
+            ${index === 2 ? "-mt-20 md:mt-0" : ""}
           `}
-        >
-          <a 
-            href={client.href} 
-            class={`${client.bgColor} flex flex-col items-center justify-center 
+          >
+            <a
+              href={client.href}
+              class={`${client.bgColor} flex flex-col items-center justify-center 
                    aspect-video w-full overflow-hidden rounded-xl p-6 md:p-10
                    group transition-all duration-300 transform  hover:shadow-xl`}
-            target="_blank" 
-            rel="noreferrer noopener"
-          >
-            <div class={`flex flex-col items-center justify-center ${client.textColor}`}>
-           
-              <img src={client.img.src} alt={client.name}  class="w-24 h-24 mb-3 object-contain" />
-              
-              {/* <span class="text-body-sm text-center font-normal">{client.name}</span> */}
-            </div>
-          </a>
-        </div>
-      ))}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              <div
+                class={`flex flex-col items-center justify-center ${client.textColor}`}
+              >
+                <img
+                  src={client.img.src}
+                  alt={client.name}
+                  class="w-24 h-24 mb-3 object-contain"
+                />
+
+                {/* <span class="text-body-sm text-center font-normal">{client.name}</span> */}
+              </div>
+            </a>
+          </div>
+        ))
+      }
     </div>
   </div>
 </section>

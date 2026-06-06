@@ -1,0 +1,106 @@
+---
+interface TimelineItem {
+  title: string;
+  subtitle: string;
+  date: string;
+  description: string;
+  muted?: boolean;
+}
+
+const items: TimelineItem[] = [
+  {
+    title: "Master en Inteligencia Artificial",
+    subtitle: "Self-Development",
+    date: "NOW",
+    description:
+      "Continuously exploring emerging technologies, researching advanced AI systems, and pushing the boundaries of what's possible in tech.",
+  },
+  {
+    title: "AI Engineer",
+    subtitle: "Freelance & Projects",
+    date: "2025",
+    description:
+      "Developing intelligent AI systems, chatbots, and machine learning solutions. Building next-gen conversational AI agents and JARVIS-like personal assistants.",
+  },
+  {
+    title: "Full-Stack Developer",
+    subtitle: "Freelance & Projects",
+    date: "2024",
+    description:
+      "Built complete web applications from frontend to backend. Developed responsive UIs, RESTful APIs, and database solutions for various clients and projects.",
+  },
+  {
+    title: "Python Developer",
+    subtitle: "Self-Taught & Projects",
+    date: "2023",
+    description:
+      "Dove deep into Python programming, building automation scripts, bots, and mastering the fundamentals of software development and problem-solving.",
+  },
+  {
+    title: "Graphic Designer",
+    subtitle: "Freelance",
+    date: "2022",
+    description:
+      "Started my creative journey as a graphic designer, creating logos, banners, and visual content. This sparked my passion for technology and digital creation.",
+  },
+  {
+    title: "Microsoft Office",
+    subtitle: "Begin Learning",
+    date: "2021",
+    description:
+      "Started my journey into the digital world by learning Microsoft Office tools. This foundational step introduced me to computers and sparked my curiosity for technology.",
+    muted: true,
+  },
+];
+---
+
+<section class="bg-white text-black pt-20 pb-40 px-6 lg:px-10">
+  <div class="mx-auto">
+    <div class="max-w-2xl mb-16">
+      <h2 class="text-3xl font-light mb-4">Recorrido profesional</h2>
+      <p class="text-lg font-light text-gray-600">
+        Cada etapa ha sumado una capa nueva a cómo entiendo el desarrollo y el
+        diseño.
+      </p>
+    </div>
+
+    <div class="flex flex-col">
+      {
+        items.map((item, index) => (
+          <div
+            class={`grid grid-cols-12 gap-6 py-10 border-t border-gray-200 ${
+              index === items.length - 1 ? "border-b" : ""
+            }`}
+          >
+            <div class="col-span-12 md:col-span-5">
+              <h3
+                class={`text-2xl font-light mb-1 ${
+                  item.muted ? "text-gray-400" : "text-black"
+                }`}
+              >
+                {item.title}
+              </h3>
+              <span class="text-sm font-light text-gray-400">
+                {item.subtitle}
+              </span>
+            </div>
+
+            <div class="col-span-4 md:col-span-2">
+              <span class="text-2xl font-light text-gray-300">{item.date}</span>
+            </div>
+
+            <div class="col-span-12 md:col-span-5">
+              <p
+                class={`text-base font-light leading-relaxed ${
+                  item.muted ? "text-gray-400" : "text-gray-600"
+                }`}
+              >
+                {item.description}
+              </p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

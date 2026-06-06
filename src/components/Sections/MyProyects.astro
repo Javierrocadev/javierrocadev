@@ -1,40 +1,46 @@
 ---
 import LogoCard from "./LogoCard.astro";
 interface Props {
-  lang: 'es' | 'en';
+  lang: "es" | "en";
 }
 
 const { lang } = Astro.props;
-import { useTranslations } from '../../i18n/utils';
+import { useTranslations } from "../../i18n/utils";
 const t = useTranslations(lang);
 
 const projects = [
   {
     title: "OPEN SOURCE COMPONENTS",
     image: { src: "/images/uiversevideocover.jpg", alt: "Uiverse Video Cover" },
-    description: t('projects.carousel'),
+    description: t("projects.carousel"),
     url: "https://uiverse.io/profile/Javierrocadev",
   },
   {
     title: "LOGO",
-    description: t('projects.logo'),
+    description: t("projects.logo"),
+  },
+  {
+    title: "PRIVATE PORTFOLIO",
+    image: { src: "/images/sandraguillen.webp", alt: "Private Portfolio" },
+    description: t("projects.privatePortfolio"),
+    url: "https://sandraguillen.com/",
   },
   {
     title: "TAILSNIPPETS",
     image: { src: "/images/tailsnippet.png", alt: "TailSnippets" },
-    description: t('projects.tailSnippets'),
+    description: t("projects.tailSnippets"),
     url: "https://tailsnippets.vercel.app/",
   },
   {
     title: "BENTO PORTFOLIO",
     image: { src: "/images/bentoportfolio.png", alt: "Bento Portfolio" },
-    description: t('projects.bento'),
+    description: t("projects.bento"),
     url: "https://jrdevportfolio.vercel.app/",
   },
   {
     title: "HELPLEO",
     image: { src: "/images/helpleo.png", alt: "Helpleo" },
-    description: t('projects.helpleo'),
+    description: t("projects.helpleo"),
   },
 ];
 
@@ -50,26 +56,32 @@ const projectsData = projects.map((p, i) => ({
 
 <section id="projects" class="bg-white text-gray-900 py-20 px-6 lg:px-10">
   <div class="mx-auto">
-    <div class="flex flex-col gap-16 lg:flex-row items-start mb-10 md:mb-16 space-y-4 sm:space-y-0">
-
+    <div
+      class="flex flex-col gap-16 lg:flex-row items-start mb-10 md:mb-16 space-y-4 sm:space-y-0"
+    >
       <!-- LEFT: Títulos -->
       <div class="max-w-xl" id="project-titles">
-        {projects.map((project, index) => (
-          <h2
-            class={`text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none
+        {
+          projects.map((project, index) => (
+            <h2
+              class={`text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none
               ${index === 0 ? "font-semibold text-black" : "font-light text-gray-400 hover:text-gray-600"}`}
-            data-index={index}
-            onclick="selectProject(this)"
-          >
-            {project.title}
-          </h2>
-        ))}
+              data-index={index}
+              onclick="selectProject(this)"
+            >
+              {project.title}
+            </h2>
+          ))
+        }
       </div>
 
       <!-- RIGHT -->
-      <div class="w-full sm:aspect-video aspect-auto rounded-2xl bg-primary/20 overflow-hidden flex items-center justify-center">
-        <div class="min-h-96 relative w-full h-full flex flex-col gap-4 justify-center items-center xl:p-16 p-4">
-
+      <div
+        class="w-full sm:aspect-video aspect-auto rounded-2xl bg-primary/20 overflow-hidden flex items-center justify-center"
+      >
+        <div
+          class="min-h-96 relative w-full h-full flex flex-col gap-4 justify-center items-center xl:p-16 p-4"
+        >
           <!-- Wrapper que controla el fade de imagen/logo -->
           <div
             id="project-visual"
@@ -92,7 +104,10 @@ const projectsData = projects.map((p, i) => ({
             </a>
 
             <!-- LogoCard: oculto por defecto -->
-            <div id="project-logocard" class="hidden flex items-center justify-center">
+            <div
+              id="project-logocard"
+              class="hidden flex items-center justify-center"
+            >
               <LogoCard />
             </div>
           </div>
@@ -110,22 +125,28 @@ const projectsData = projects.map((p, i) => ({
   </div>
 </section>
 
-<script id="projects-data" type="application/json" set:html={JSON.stringify(projectsData)} />
+<script
+  id="projects-data"
+  type="application/json"
+  set:html={JSON.stringify(projectsData)}
+/>
 
 <script>
-  const projects = JSON.parse(document.getElementById("projects-data").textContent);
+  const projects = JSON.parse(
+    document.getElementById("projects-data").textContent,
+  );
 
-  const visualEl      = document.getElementById("project-visual");
-  const imgEl         = document.getElementById("project-image");
-  const linkEl        = document.getElementById("project-link");
-  const logoEl        = document.getElementById("project-logocard");
+  const visualEl = document.getElementById("project-visual");
+  const imgEl = document.getElementById("project-image");
+  const linkEl = document.getElementById("project-link");
+  const logoEl = document.getElementById("project-logocard");
   const descriptionEl = document.getElementById("project-description");
 
   // Duración del fade en ms — debe coincidir con duration-300 de Tailwind (300ms)
   const FADE_DURATION = 300;
 
   window.selectProject = function (el) {
-    const index   = Number(el.dataset.index);
+    const index = Number(el.dataset.index);
     const project = projects[index];
 
     // Si ya está seleccionado, no hacer nada
@@ -133,9 +154,10 @@ const projectsData = projects.map((p, i) => ({
 
     // 1) Títulos: activo en negro, resto en gris
     document.querySelectorAll("#project-titles h2").forEach((h, i) => {
-      h.className = i === index
-        ? "text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none font-semibold text-black"
-        : "text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none font-light text-gray-400 hover:text-gray-600";
+      h.className =
+        i === index
+          ? "text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none font-semibold text-black"
+          : "text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none font-light text-gray-400 hover:text-gray-600";
     });
 
     // 2) Fade out visual + descripción
