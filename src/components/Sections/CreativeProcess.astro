@@ -9,82 +9,57 @@ import MockImage from "../../assets/images/mock.jpeg";
 import Hifi from "../../assets/images/hifi.jpg";
 import Arrow from "../../assets/images/arrow-big-right.svg";
 interface Props {
-  lang: 'es' | 'en';
+  lang: "es" | "en";
 }
 
 const { lang } = Astro.props;
-import { useTranslations } from '../../i18n/utils';
+import { useTranslations } from "../../i18n/utils";
 const t = useTranslations(lang);
 ---
 
- <section class="bg-white text-gray-900 py-20   px-6 lg:px-10 flex flex-col">
-    <div class="max-w-xl mb-12">
-                    <!-- Usando clases Tailwind que simulan h4 y body del usuario -->
-                    <h2 class="text-3xl font-light mb-4">{t('process.title')}</h2>
-                    <p class="text-lg font-light text-gray-600">
-                      {t('process.text')}
-                    </p>
-                </div>
-  
-            
-                <!-- Botones de Navegación del Carrusel -->
-                 <div
- class="w-full h-fit flex over flex-col gap-8 justify-center items-center bg-gray-100/50 rounded-xl py-12 sm:p-12 xl:flex-row border border-gray-200"
- >
- <img
- src={MockImage.src}
- alt="Mockup en papel"
- class="h-80 w-64 rounded-xl align-baseline object-cover shadow-lg"
- />
-<Arrow
- class="rotate-90 xl:rotate-0 w-20 h-auto mt-4 fill-black z-10 relative group-hover:translate-x-6 transition-all duration-700"
- />
- <img
-src={Hifi.src}
- alt="Diseño Hi-Fi en Figma"
- class="h-80 w-64 rounded-xl align-baseline object-cover shadow-lg"
- />
- <Arrow
- class="rotate-90 xl:rotate-0 w-20 h-auto mt-4 fill-black z-10 relative group-hover:translate-x-6 transition-all duration-700"
-/>
- 
+<section class="bg-white text-gray-900 py-20 px-6 lg:px-10 flex flex-col">
+  <div class="max-w-xl mb-12">
+    <!-- Usando clases Tailwind que simulan h4 y body del usuario -->
+    <h2 class="text-3xl font-light mb-4">{t("process.title")}</h2>
+    <p class="text-lg font-light text-gray-600">
+      {t("process.text")}
+    </p>
+  </div>
+
+  <!-- Botones de Navegación del Carrusel -->
   <div
-        class="relative h-80 w-64 overflow-hidden rounded-xl bg-[#3d3c3d] drop-shadow-xl group"
+    class="w-full h-fit flex over flex-col gap-8 justify-center items-center bg-gray-100/50 rounded-xl py-12 sm:p-12 xl:flex-row border border-gray-200"
+  >
+    <img
+      src={MockImage.src}
+      alt="Mockup en papel"
+      class="h-80 w-64 rounded-xl align-baseline object-cover shadow-lg"
+    />
+    <Arrow
+      class="rotate-90 xl:rotate-0 w-20 h-auto mt-4 fill-black z-10 relative group-hover:translate-x-6 transition-all duration-700"
+    />
+    <img
+      src={Hifi.src}
+      alt="Diseño Hi-Fi en Figma"
+      class="h-80 w-64 rounded-xl align-baseline object-cover shadow-lg"
+    />
+    <Arrow
+      class="rotate-90 xl:rotate-0 w-20 h-auto mt-4 fill-black z-10 relative group-hover:translate-x-6 transition-all duration-700"
+    />
+
+    <div
+      class="relative h-80 w-64 overflow-hidden rounded-xl bg-[#3d3c3d] drop-shadow-xl group"
+    >
+      <div
+        class="absolute inset-0.5 z-[1] flex flex-col items-start justify-evenly gap-6 rounded-lg bg-[#323132] p-4 text-white opacity-90"
       >
         <div
-          class="absolute inset-0.5 z-[1] flex flex-col items-start justify-evenly gap-6 rounded-lg bg-[#323132] p-4 text-white opacity-90"
+          class="h-full w-full overflow-hidden rounded-md bg-white flex justify-center items-center relative before:absolute before:top-1/2 before:-left-44 before:-translate-x-12 before:-translate-y-12 before:w-full before:h-24 before:bg-neutral-100 before:z-10 group-hover:before:left-12 before:transition-all before:duration-700 before:border-y before:border-neutral-200"
         >
-          <div
-            class="h-full w-full overflow-hidden rounded-md bg-white flex justify-center items-center relative before:absolute before:top-1/2 before:-left-44 before:-translate-x-12 before:-translate-y-12 before:w-full before:h-24 before:bg-neutral-100 before:z-10 group-hover:before:left-12 before:transition-all before:duration-700 before:border-y before:border-neutral-200"
+          <button
+            class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-800 border-neutral-800 p-2 text-white group-hover:scale-110 duration-1000 transition-all"
           >
-            <button
-              class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-800 border-neutral-800 p-2 text-white group-hover:scale-110 duration-1000 transition-all"
-            >
-              <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="shrink-0 stroke-white"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M5 12l14 0"></path>
-                <path d="M13 18l6 -6"></path>
-                <path d="M13 6l6 6"></path>
-              </svg>
-            </button>
-          </div>
-          <div class="flex justify-between w-full items-center">
-            <div class="">
-              <p class="text-xl font-bold">Buttons</p>
-              <p class="">3 variants</p>
-            </div>
+            <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -95,48 +70,177 @@ src={Hifi.src}
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="w-8 h-8 -translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 duration-300 transition-all"
+              class="shrink-0 stroke-white"
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
               <path d="M5 12l14 0"></path>
               <path d="M13 18l6 -6"></path>
               <path d="M13 6l6 6"></path>
             </svg>
-          </div>
+          </button>
         </div>
-        <div
-          class="absolute transition-all duration-500 top-1/2 -left-1/2 group-hover:top-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-amber-800 blur-[50px]"
-        >
+        <div class="flex justify-between w-full items-center">
+          <div class="">
+            <p class="text-xl font-bold">Buttons</p>
+            <p class="">3 variants</p>
+          </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="w-8 h-8 -translate-x-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 duration-300 transition-all"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M5 12l14 0"></path>
+            <path d="M13 18l6 -6"></path>
+            <path d="M13 6l6 6"></path>
+          </svg>
         </div>
       </div>
- </div>
-                
-       <div class="max-w-xl mx-auto my-20">
-                    <!-- Usando clases Tailwind que simulan h4 y body del usuario -->
-                    
-                    <p class="text-lg font-light text-gray-600 text-center">
-                    {t('process.text2')}
-                    </p>
-                </div>
+      <div
+        class="absolute transition-all duration-500 top-1/2 -left-1/2 group-hover:top-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-amber-800 blur-[50px]"
+      >
+      </div>
+    </div>
+  </div>
 
-<div
-class="w-full h-fit flex flex-col gap-8 justify-center items-center bg-gray-100/50 rounded-xl sm:p-12 px-0 py-6 lg:flex-row border border-gray-200"
- >
+  <div class="max-w-xl mx-auto my-20">
+    <!-- Usando clases Tailwind que simulan h4 y body del usuario -->
 
-<div
-        class="relative h-80 w-64 overflow-hidden rounded-xl bg-[#3d3c3d] drop-shadow-xl group"
+    <p class="text-lg font-light text-gray-600 text-center">
+      {t("process.text2")}
+    </p>
+  </div>
+
+  <div
+    class="w-full h-fit flex flex-col gap-8 justify-center items-center bg-gray-100/50 rounded-xl sm:p-12 px-0 py-6 lg:flex-row border border-gray-200"
+  >
+    <div
+      class="relative h-80 w-64 overflow-hidden rounded-xl bg-[#3d3c3d] drop-shadow-xl group"
+    >
+      <div
+        class="absolute inset-0.5 z-[1] flex flex-col items-start justify-evenly gap-6 rounded-lg bg-[#323132] p-4 text-white opacity-90"
       >
         <div
-          class="absolute inset-0.5 z-[1] flex flex-col items-start justify-evenly gap-6 rounded-lg bg-[#323132] p-4 text-white opacity-90"
+          class="h-full w-full overflow-hidden rounded-md bg-white flex justify-center items-center relative before:absolute before:top-1/2 before:-left-44 before:-translate-x-12 before:-translate-y-12 before:w-full before:h-24 before:bg-neutral-100 before:z-10 group-hover:before:left-12 before:transition-all before:duration-700 before:border-y before:border-neutral-200"
+        >
+          <button
+            class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-800 border-neutral-800 p-2 text-white group-hover:scale-110 duration-1000 transition-all"
+          >
+            <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="shrink-0 stroke-white"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M5 12l14 0"></path>
+              <path d="M13 18l6 -6"></path>
+              <path d="M13 6l6 6"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div
+        class="absolute transition-all duration-500 bottom-1/2 -left-1/2 group-hover:bottom-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-green-100 blur-[50px]"
+      >
+      </div>
+    </div>
+
+    <div
+      class="relative h-80 w-64 overflow-hidden rounded-xl bg-[#3d3c3d] drop-shadow-xl group"
+    >
+      <div
+        class="absolute inset-0.5 z-[1] flex flex-col items-start justify-evenly gap-6 rounded-lg bg-[#323132] p-3 text-white opacity-90"
+      >
+        <div
+          class="h-full w-full overflow-hidden rounded-md bg-white flex justify-center items-center relative before:absolute before:top-1/2 before:-left-48 before:-translate-x-12 before:-translate-y-12 before:w-full before:h-24 before:bg-neutral-100 before:z-10 group-hover:before:left-12 before:transition-all before:duration-700 before:border-y before:border-neutral-200"
         >
           <div
-            class="h-full w-full overflow-hidden rounded-md bg-white flex justify-center items-center relative before:absolute before:top-1/2 before:-left-44 before:-translate-x-12 before:-translate-y-12 before:w-full before:h-24 before:bg-neutral-100 before:z-10 group-hover:before:left-12 before:transition-all before:duration-700 before:border-y before:border-neutral-200"
+            class="flex z-20 gap-2.5 translate-x-32 group-hover:-translate-x-56 duration-1000 transition-all"
           >
             <button
-              class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-800 border-neutral-800 p-2 text-white group-hover:scale-110 duration-1000 transition-all"
+              class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-800 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
             >
               <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
               <svg
+                class="shrink-0 stroke-white"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 24 24"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                <path d="M5 12l14 0"></path>
+                <path d="M13 18l6 -6"></path>
+                <path d="M13 6l6 6"></path>
+              </svg>
+            </button>
+            <button
+              class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-600 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
+            >
+              <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+              <svg
+                class="shrink-0 stroke-white"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 24 24"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                <path d="M5 12l14 0"></path>
+                <path d="M13 18l6 -6"></path>
+                <path d="M13 6l6 6"></path>
+              </svg>
+            </button>
+            <div class="relative">
+              <button
+                class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-400 border-neutral-800 p-2 text-white group-hover:scale-125 duration-1000 transition-all"
+              >
+                <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+                <svg
+                  class="shrink-0 stroke-white"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  height="24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                  <path d="M5 12l14 0"></path>
+                  <path d="M13 18l6 -6"></path>
+                  <path d="M13 6l6 6"></path>
+                </svg>
+              </button>
+              <svg
+                class="absolute"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -146,38 +250,84 @@ class="w-full h-fit flex flex-col gap-8 justify-center items-center bg-gray-100/
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                class="shrink-0 stroke-white"
               >
                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M3 12l3 0"></path>
+                <path d="M12 3l0 3"></path>
+                <path d="M7.8 7.8l-2.2 -2.2"></path>
+                <path d="M16.2 7.8l2.2 -2.2"></path>
+                <path d="M7.8 16.2l-2.2 2.2"></path>
+                <path d="M12 12l9 3l-4 2l-2 4l-3 -9"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="absolute transition-all duration-500 top-1/2 -left-1/2 group-hover:top-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-white blur-[150px]"
+      >
+      </div>
+    </div>
+
+    <div
+      class="relative h-80 w-64 overflow-hidden rounded-xl bg-[#3d3c3d] drop-shadow-xl group"
+    >
+      <div
+        class="absolute inset-0.5 z-[1] flex flex-col items-start justify-evenly gap-6 rounded-lg bg-[#323132] p-4 text-white opacity-90"
+      >
+        <div
+          class="h-full w-full overflow-hidden rounded-md bg-white flex justify-center items-center relative before:absolute before:top-1/2 before:-left-48 before:-translate-x-12 before:-translate-y-12 before:w-full before:h-24 before:bg-neutral-100 before:z-10 group-hover:before:left-12 before:transition-all before:duration-700 before:border-y before:border-neutral-200"
+        >
+          <div
+            class="flex z-20 gap-2.5 translate-x-32 group-hover:-translate-x-40 duration-1000 transition-all"
+          >
+            <button
+              class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-800 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
+            >
+              <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+              <svg
+                class="shrink-0 stroke-white"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 24 24"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
                 <path d="M5 12l14 0"></path>
                 <path d="M13 18l6 -6"></path>
                 <path d="M13 6l6 6"></path>
               </svg>
             </button>
-          </div>
-         
-        </div>
-        <div
-          class="absolute transition-all duration-500 bottom-1/2 -left-1/2 group-hover:bottom-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-green-100 blur-[50px]"
-        >
-        </div>
-      </div>
-
-      
-      <div
-        class="relative h-80 w-64 overflow-hidden rounded-xl bg-[#3d3c3d] drop-shadow-xl group"
-      >
-        <div
-          class="absolute inset-0.5 z-[1] flex flex-col items-start justify-evenly gap-6 rounded-lg bg-[#323132] p-3 text-white opacity-90"
-        >
-          <div
-            class="h-full w-full overflow-hidden rounded-md bg-white flex justify-center items-center relative before:absolute before:top-1/2 before:-left-48 before:-translate-x-12 before:-translate-y-12 before:w-full before:h-24 before:bg-neutral-100 before:z-10 group-hover:before:left-12 before:transition-all before:duration-700 before:border-y before:border-neutral-200"
-          >
-            <div
-              class="flex z-20 gap-2.5 translate-x-32 group-hover:-translate-x-56 duration-1000 transition-all"
+            <button
+              class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-600 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
             >
+              <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+              <svg
+                class="shrink-0 stroke-white"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 24 24"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                <path d="M5 12l14 0"></path>
+                <path d="M13 18l6 -6"></path>
+                <path d="M13 6l6 6"></path>
+              </svg>
+            </button>
+            <div class="relative">
               <button
-                class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-800 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
+                class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-400 group-hover:bg-sky-700 border-neutral-800 p-2 text-white group-hover:scale-125 duration-1000 transition-all"
               >
                 <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
                 <svg
@@ -198,53 +348,12 @@ class="w-full h-fit flex flex-col gap-8 justify-center items-center bg-gray-100/
                   <path d="M13 6l6 6"></path>
                 </svg>
               </button>
-              <button
-                class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-600 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
+
+              <div
+                class="absolute top-4 left-24 duration-700 group-hover:delay-700 transition-all translate-y-36 translate-x-20 group-hover:translate-x-0 group-hover:translate-y-0"
               >
-                <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
                 <svg
-                  class="shrink-0 stroke-white"
-                  stroke-linejoin="round"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  height="24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
-                  <path d="M5 12l14 0"></path>
-                  <path d="M13 18l6 -6"></path>
-                  <path d="M13 6l6 6"></path>
-                </svg>
-              </button>
-              <div class="relative">
-                <button
-                  class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-400 border-neutral-800 p-2 text-white group-hover:scale-125 duration-1000 transition-all"
-                >
-                  <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
-                  <svg
-                    class="shrink-0 stroke-white"
-                    stroke-linejoin="round"
-                    stroke-linecap="round"
-                    stroke-width="2"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    height="24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
-                    <path d="M5 12l14 0"></path>
-                    <path d="M13 18l6 -6"></path>
-                    <path d="M13 6l6 6"></path>
-                  </svg>
-                </button>
-                <svg
-                  class="absolute"
+                  class="w-12 h-12 stroke-amber-300 duration-1000 transition-all group-hover:translate-0 group-hover:delay-1000 group-hover:scale-75"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -265,152 +374,35 @@ class="w-full h-fit flex flex-col gap-8 justify-center items-center bg-gray-100/
                 </svg>
               </div>
             </div>
-          </div>
-          
-        </div>
-        <div
-          class="absolute transition-all duration-500 top-1/2 -left-1/2 group-hover:top-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-white blur-[150px]"
-        >
-        </div>
-      </div>
-
-      <div
-        class="relative h-80 w-64 overflow-hidden rounded-xl bg-[#3d3c3d] drop-shadow-xl group"
-      >
-        <div
-          class="absolute inset-0.5 z-[1] flex flex-col items-start justify-evenly gap-6 rounded-lg bg-[#323132] p-4 text-white opacity-90"
-        >
-          <div
-            class="h-full w-full overflow-hidden rounded-md bg-white flex justify-center items-center relative before:absolute before:top-1/2 before:-left-48 before:-translate-x-12 before:-translate-y-12 before:w-full before:h-24 before:bg-neutral-100 before:z-10 group-hover:before:left-12 before:transition-all before:duration-700 before:border-y before:border-neutral-200"
-          >
-            <div
-              class="flex z-20 gap-2.5 translate-x-32 group-hover:-translate-x-40 duration-1000 transition-all"
+            <button
+              class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-600 border-neutral-800 p-2 text-white group-hover:translate-x-4 duration-1000 transition-all"
             >
-              <button
-                class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-800 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
+              <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
+              <svg
+                class="shrink-0 stroke-white"
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2"
+                stroke="currentColor"
+                fill="none"
+                viewBox="0 0 24 24"
+                height="24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
-                <svg
-                  class="shrink-0 stroke-white"
-                  stroke-linejoin="round"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  height="24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
-                  <path d="M5 12l14 0"></path>
-                  <path d="M13 18l6 -6"></path>
-                  <path d="M13 6l6 6"></path>
-                </svg>
-              </button>
-              <button
-                class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-600 border-neutral-800 p-2 text-white group-hover:opacity-0 duration-1000 transition-all"
-              >
-                <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
-                <svg
-                  class="shrink-0 stroke-white"
-                  stroke-linejoin="round"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  height="24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
-                  <path d="M5 12l14 0"></path>
-                  <path d="M13 18l6 -6"></path>
-                  <path d="M13 6l6 6"></path>
-                </svg>
-              </button>
-              <div class="relative">
-                <button
-                  class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-400 group-hover:bg-sky-700 border-neutral-800 p-2 text-white group-hover:scale-125 duration-1000 transition-all"
-                >
-                  <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
-                  <svg
-                    class="shrink-0 stroke-white"
-                    stroke-linejoin="round"
-                    stroke-linecap="round"
-                    stroke-width="2"
-                    stroke="currentColor"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    height="24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
-                    <path d="M5 12l14 0"></path>
-                    <path d="M13 18l6 -6"></path>
-                    <path d="M13 6l6 6"></path>
-                  </svg>
-                </button>
-
-                <div
-                  class="absolute top-4 left-24 duration-700 group-hover:delay-700 transition-all translate-y-36 translate-x-20 group-hover:translate-x-0 group-hover:translate-y-0"
-                >
-                  <svg
-                    class="w-12 h-12 stroke-amber-300 duration-1000 transition-all group-hover:translate-0 group-hover:delay-1000 group-hover:scale-75"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M3 12l3 0"></path>
-                    <path d="M12 3l0 3"></path>
-                    <path d="M7.8 7.8l-2.2 -2.2"></path>
-                    <path d="M16.2 7.8l2.2 -2.2"></path>
-                    <path d="M7.8 16.2l-2.2 2.2"></path>
-                    <path d="M12 12l9 3l-4 2l-2 4l-3 -9"></path>
-                  </svg>
-                </div>
-              </div>
-              <button
-                class="flex z-10 w-32 items-center justify-center gap-4 rounded-md border-2 bg-neutral-600 border-neutral-800 p-2 text-white group-hover:translate-x-4 duration-1000 transition-all"
-              >
-                <div class="h-0.5 w-20 shrink-0 rounded-full bg-white"></div>
-                <svg
-                  class="shrink-0 stroke-white"
-                  stroke-linejoin="round"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  height="24"
-                  width="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
-                  <path d="M5 12l14 0"></path>
-                  <path d="M13 18l6 -6"></path>
-                  <path d="M13 6l6 6"></path>
-                </svg>
-              </button>
-            </div>
+                <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                <path d="M5 12l14 0"></path>
+                <path d="M13 18l6 -6"></path>
+                <path d="M13 6l6 6"></path>
+              </svg>
+            </button>
           </div>
-         
-        </div>
-        <div
-          class="absolute transition-all duration-500 top-1/2 -left-1/2 group-hover:top-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-sky-800 blur-[50px]"
-        >
         </div>
       </div>
-
-
-</div>
-    </section>
+      <div
+        class="absolute transition-all duration-500 top-1/2 -left-1/2 group-hover:top-12 group-hover:-left-1/4 h-48 w-56 -z-10 bg-sky-800 blur-[50px]"
+      >
+      </div>
+    </div>
+  </div>
+</section>

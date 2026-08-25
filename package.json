@@ -24,6 +24,7 @@
     "react-is": "^19.2.7",
     "sanity": "^5.30.0",
     "styled-components": "^6.4.2",
-    "tailwindcss": "^4.1.17"
+    "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3"
   }
 }

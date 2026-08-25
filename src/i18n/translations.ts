@@ -98,6 +98,18 @@ export const translations = {
     "userJourney.final":
       "Este mapa me permite diseñar con propósito. Cada botón, cada sección, cada animación tiene una razón de ser dentro del flujo completo.",
     "userJourney.step": "Paso ",
+    "userJourney.card1.tag": "¿Qué busca?",
+    "userJourney.card1.title": "Intención",
+    "userJourney.card1.desc":
+      "Cada visita llega con un objetivo. Entenderlo define qué debe aparecer primero y qué puede esperar.",
+    "userJourney.card2.tag": "¿Dónde puede perderse?",
+    "userJourney.card2.title": "Fricción",
+    "userJourney.card2.desc":
+      "Los puntos de abandono son siempre los mismos: navegación confusa, carga lenta, o una jerarquía visual que no guía.",
+    "userJourney.card3.tag": "¿Qué acción quiero?",
+    "userJourney.card3.title": "Conversión",
+    "userJourney.card3.desc":
+      "Un sitio sin acción clara es un folleto. Definir el CTA principal orienta cada decisión de diseño que viene después.",
   },
   en: {
     "nav.home": "Home",
@@ -189,5 +201,17 @@ export const translations = {
     "userJourney.final":
       "This map allows me to design with purpose. Every button, every section, every animation has a reason within the complete flow.",
     "userJourney.step": "Step ",
+    "userJourney.card1.tag": "What are they looking for?",
+    "userJourney.card1.title": "Intention",
+    "userJourney.card1.desc":
+      "Each visit arrives with a goal. Understanding it defines what should appear first and what can wait.",
+    "userJourney.card2.tag": "Where might they get lost?",
+    "userJourney.card2.title": "Friction",
+    "userJourney.card2.desc":
+      "The drop-off points are always the same: confusing navigation, slow loading, or a visual hierarchy that doesn't guide.",
+    "userJourney.card3.tag": "What action do I want?",
+    "userJourney.card3.title": "Conversion",
+    "userJourney.card3.desc":
+      "A site without a clear action is a brochure. Defining the main CTA guides every design decision that follows.",
   },
 } as const;

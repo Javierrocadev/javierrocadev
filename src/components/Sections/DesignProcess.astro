@@ -1,93 +1,93 @@
 ---
 interface Props {
-  lang: 'es' | 'en';
+  lang: "es" | "en";
 }
 
 const { lang } = Astro.props;
-import { useTranslations } from '../../i18n/utils';
+import { useTranslations } from "../../i18n/utils";
 const t = useTranslations(lang);
 ---
 
-<section
-  class="bg-white text-gray-900 pt-10 pb-20 px-6 lg:px-10"
->
-  <div class="w-full mx-auto relative ">
+<section class="bg-white text-gray-900 pt-10 pb-20 px-6 lg:px-10 lg:pt-60">
+  <div class="w-full mx-auto relative">
     <!-- Header Section -->
-    <div class="lg:absolute relative lg:mb-0 mb-12 top-0 left-0 w-full flex justify-center">
+    <div
+      class="lg:absolute relative lg:mb-0 mb-12 top-0 left-0 w-full flex justify-center pointer-events-none"
+    >
       <div class="text-center">
         <h2 class="text-4xl font-light mb-3">
-          {t('designProcess.title')}
+          {t("designProcess.title")}
         </h2>
         <p class="text-lg font-light text-gray-600">
-          {t('designProcess.text')}
+          {t("designProcess.text")}
         </p>
       </div>
     </div>
 
     <!-- Skills Grid -->
-    <div class="w-full mx-auto space-y-6 ">
+    <div class="w-full mx-auto space-y-6">
       <!-- Row 1 -->
-      <div class="flex justify-between items-center flex-col gap-6 lg:flex-row">
+      <div class="flex justify-between items-center flex-col gap-6 lg:flex-row group">
         <div
           class="bg-gray-100/50 border border-gray-200 relative
                  w-full max-w-[280px] rounded-3xl py-6 px-8
-                 transition-all duration-300 hover:shadow-md"
+                 transition duration-500 ease-in-out hover:shadow-md group-hover:-translate-x-6 cursor-pointer"
         >
           <div class="absolute inset-0 w-full flex items-center justify-center">
-            <p class="text-gray-700">{t('designProcess.userCenteredDesign')}</p>
+            <p class="text-gray-700">{t("designProcess.userCenteredDesign")}</p>
           </div>
         </div>
         <div
           class="bg-gray-100/50 border border-gray-200 relative
                  w-full max-w-[280px] rounded-3xl py-6 px-8
-                 transition-all duration-300 hover:shadow-md"
+                 transition duration-500 ease-in-out hover:shadow-md group-hover:translate-x-6 cursor-pointer"
         >
           <div class="absolute inset-0 w-full flex items-center justify-center">
-            <p class="text-gray-700">{t('designProcess.designThinking')}</p>
+            <p class="text-gray-700">{t("designProcess.designThinking")}</p>
           </div>
         </div>
       </div>
 
       <!-- Row 2 -->
-      <div class="flex justify-between items-center flex-col gap-6 lg:flex-row">
+      <div class="flex justify-between items-center flex-col gap-6 lg:flex-row group">
         <div
           class="bg-gray-100/50 border border-gray-200 relative
                  w-full max-w-[280px] rounded-3xl py-6 px-8 lg:ml-12 ml-0
-                 transition-all duration-300 hover:shadow-md"
+                 transition duration-500 ease-in-out hover:shadow-md group-hover:-translate-x-6 cursor-pointer"
         >
           <div class="absolute inset-0 w-full flex items-center justify-center">
-            <p class="text-gray-700">{t('designProcess.wireframing')}</p>
+            <p class="text-gray-700">{t("designProcess.wireframing")}</p>
           </div>
         </div>
         <div
           class="bg-gray-100/50 border border-gray-200 relative
                  w-full max-w-[280px] rounded-3xl py-6 px-8 lg:mr-12 mr-0
-                 transition-all duration-300 hover:shadow-md"
+                 transition duration-500 ease-in-out hover:shadow-md group-hover:translate-x-6 cursor-pointer"
         >
           <div class="absolute inset-0 w-full flex items-center justify-center">
-            <p class="text-gray-700">{t('designProcess.uiDesign')}</p>
+            <p class="text-gray-700">{t("designProcess.uiDesign")}</p>
           </div>
         </div>
       </div>
 
       <!-- Row 3 -->
-      <div class="flex justify-between items-center flex-col gap-6 lg:flex-row">
+      <div class="flex justify-between items-center flex-col gap-6 lg:flex-row group">
         <div
           class="bg-gray-100/50 border border-gray-200 relative
                  w-full max-w-[280px] rounded-3xl py-6 px-8 lg:ml-30 ml-0
-                 transition-all duration-300 hover:shadow-md"
+                 transition duration-500 ease-in-out hover:shadow-md group-hover:-translate-x-6 cursor-pointer"
         >
           <div class="absolute inset-0 w-full flex items-center justify-center">
-            <p class="text-gray-700">{t('designProcess.codeImplementation')}</p>
+            <p class="text-gray-700">{t("designProcess.codeImplementation")}</p>
           </div>
         </div>
         <div
           class="bg-gray-100/50 border border-gray-200 relative
                  w-full max-w-[280px] rounded-3xl py-6 px-8 lg:mr-30 mr-0
-                 transition-all duration-300 hover:shadow-md"
+                 transition duration-500 ease-in-out hover:shadow-md group-hover:translate-x-6 cursor-pointer"
         >
           <div class="absolute inset-0 w-full flex items-center justify-center">
-            <p class="text-gray-700">{t('designProcess.responsiveDesign')}</p>
+            <p class="text-gray-700">{t("designProcess.responsiveDesign")}</p>
           </div>
         </div>
       </div>

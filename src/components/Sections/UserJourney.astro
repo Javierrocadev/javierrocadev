@@ -20,11 +20,11 @@ const t = useTranslations(lang);
         class="flex items-center justify-center gap-2 my-8"
         aria-hidden="true"
       >
-        <div class="h-2 w-2 rounded-full bg-slate-300"></div>
+        <div data-dot="1" class="h-2 w-2 rounded-full"></div>
         <div class="h-px w-8 bg-slate-200"></div>
-        <div class="h-2 w-2 rounded-full bg-slate-300"></div>
+        <div data-dot="2" class="h-2 w-2 rounded-full"></div>
         <div class="h-px w-8 bg-slate-200"></div>
-        <div class="h-2 w-2 rounded-full bg-primary"></div>
+        <div data-dot="3" class="h-2 w-2 rounded-full"></div>
       </div>
 
       <!-- Línea conectora hacia el contenido -->
@@ -35,355 +35,133 @@ const t = useTranslations(lang);
     </div>
 
     <div
-      class="grid grid-cols-1 md:grid-cols-3 gap-px bg-gray-200 rounded-xl overflow-hidden"
+      id="user-journey-grid"
+      class="relative grid grid-cols-1 md:grid-cols-3 gap-px bg-gray-200 rounded-xl overflow-hidden"
     >
-      <div class="bg-white p-10 flex flex-col gap-4">
-        <span
-          class="text-xs font-medium tracking-widest text-gray-400 uppercase"
-          >¿Qué busca?</span
+      <div
+        id="hover-highlight"
+        class="absolute pointer-events-none transition-all duration-300 ease-out rounded-xl opacity-0 z-0"
+        style="background: linear-gradient(to right, rgb(235, 242, 252) 0%, transparent 70%);"
+      >
+      </div>
+      <div
+        data-card="1"
+        class="bg-white p-10 flex flex-col gap-4 group relative overflow-hidden transition-shadow duration-300 hover:shadow-lg z-10"
+      >
+        <div
+          class="absolute -top-28 -right-28 w-72 h-72 rounded-bl-full bg-[#EDF3FC] blur-3xl translate-x-full -translate-y-full group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700 ease-out"
         >
-        <h3 class="text-2xl font-light text-black">Intención</h3>
-        <p class="text-base font-light text-gray-600 leading-relaxed">
-          Cada visita llega con un objetivo. Entenderlo define qué debe aparecer
-          primero y qué puede esperar.
+        </div>
+        <span
+          class="relative z-10 text-xs font-medium tracking-widest text-gray-400 group-hover:text-primary uppercase transition-colors duration-300"
+          >{t("userJourney.card1.tag")}</span
+        >
+        <h3 class="relative z-10 text-2xl font-light text-black">
+          {t("userJourney.card1.title")}
+        </h3>
+        <p
+          class="relative z-10 text-base font-light text-gray-600 leading-relaxed"
+        >
+          {t("userJourney.card1.desc")}
         </p>
       </div>
 
-      <div class="bg-white p-10 flex flex-col gap-4">
-        <span
-          class="text-xs font-medium tracking-widest text-gray-400 uppercase"
-          >¿Dónde puede perderse?</span
+      <div
+        data-card="2"
+        class="bg-white p-10 flex flex-col gap-4 group relative overflow-hidden transition-shadow duration-300 hover:shadow-lg z-10"
+      >
+        <div
+          class="absolute -top-28 left-0 w-full h-56 rounded-b-full bg-[#EDF3FC] blur-3xl -translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-out"
         >
-        <h3 class="text-2xl font-light text-black">Fricción</h3>
-        <p class="text-base font-light text-gray-600 leading-relaxed">
-          Los puntos de abandono son siempre los mismos: navegación confusa,
-          carga lenta, o una jerarquía visual que no guía.
+        </div>
+        <span
+          class="relative z-10 text-xs font-medium tracking-widest text-gray-400 group-hover:text-primary uppercase transition-colors duration-300"
+          >{t("userJourney.card2.tag")}</span
+        >
+        <h3 class="relative z-10 text-2xl font-light text-black">
+          {t("userJourney.card2.title")}
+        </h3>
+        <p
+          class="relative z-10 text-base font-light text-gray-600 leading-relaxed"
+        >
+          {t("userJourney.card2.desc")}
         </p>
       </div>
 
-      <div class="bg-white p-10 flex flex-col gap-4">
-        <span
-          class="text-xs font-medium tracking-widest text-gray-400 uppercase"
-          >¿Qué acción quiero?</span
+      <div
+        data-card="3"
+        class="bg-white p-10 flex flex-col gap-4 group relative overflow-hidden transition-shadow duration-300 hover:shadow-lg z-10"
+      >
+        <div
+          class="absolute -top-28 -left-28 w-72 h-72 rounded-br-full bg-[#EDF3FC] blur-3xl -translate-x-full -translate-y-full group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-700 ease-out"
         >
-        <h3 class="text-2xl font-light text-black">Conversión</h3>
-        <p class="text-base font-light text-gray-600 leading-relaxed">
-          Un sitio sin acción clara es un folleto. Definir el CTA principal
-          orienta cada decisión de diseño que viene después.
+        </div>
+        <span
+          class="relative z-10 text-xs font-medium tracking-widest text-gray-400 group-hover:text-primary uppercase transition-colors duration-300"
+          >{t("userJourney.card3.tag")}</span
+        >
+        <h3 class="relative z-10 text-2xl font-light text-black">
+          {t("userJourney.card3.title")}
+        </h3>
+        <p
+          class="relative z-10 text-base font-light text-gray-600 leading-relaxed"
+        >
+          {t("userJourney.card3.desc")}
         </p>
       </div>
     </div>
   </div>
 </section>
-<section class="bg-white text-gray-900 py-20 px-6 lg:px-10 flex flex-col">
-  <div class="max-w-2xl mb-12 mx-auto text-center">
-    <!-- Stepper visual que refleja los 4 pasos -->
-    <div class="flex items-center justify-center gap-2 mb-8" aria-hidden="true">
-      <div class="h-2 w-2 rounded-full bg-slate-300"></div>
-      <div class="h-px w-8 bg-slate-200"></div>
-      <div class="h-2 w-2 rounded-full bg-slate-300"></div>
-      <div class="h-px w-8 bg-slate-200"></div>
-      <div class="h-2 w-2 rounded-full bg-slate-300"></div>
-      <div class="h-px w-8 bg-slate-200"></div>
-      <div class="h-2 w-2 rounded-full bg-primary"></div>
-    </div>
 
-    <h2 class="text-3xl font-light mb-4">
-      {t("userJourney.title.1")}
-      <span class="text-primary/70">{t("userJourney.title.2")}</span>
-    </h2>
-    <p class="text-lg font-light text-gray-600">
-      {t("userJourney.desc")}
-    </p>
+<style>
+  [data-dot] {
+    background-color: #cbd5e1;
+    transition: background-color 0.3s;
+  }
+  section:has([data-card="1"]:hover) [data-dot="1"],
+  section:has([data-card="2"]:hover) [data-dot="2"],
+  section:has([data-card="3"]:hover) [data-dot="3"] {
+    background-color: rgb(21 45 67);
+  }
+</style>
 
-    <!-- Línea conectora hacia el contenido -->
-    <div class="mt-8 flex justify-center" aria-hidden="true">
-      <div class="h-12 w-px bg-gradient-to-b from-slate-300 to-transparent">
-      </div>
-    </div>
-  </div>
+<script>
+  const grid = document.getElementById("user-journey-grid");
+  const highlight = document.getElementById("hover-highlight");
 
-  <!-- Timeline de pasos -->
-  <div class="w-full max-w-6xl mx-auto relative" id="user-journey">
-    <!-- Línea conectora horizontal (desktop) -->
-    <div
-      class="hidden lg:block absolute top-[72px] left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-slate-200 via-slate-300 to-primary/40"
-      aria-hidden="true"
-    >
-    </div>
+  if (grid && highlight) {
+    const cards = grid.querySelectorAll("[data-card]");
+    let currentCard = null;
 
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-4 lg:gap-6 relative"
-    >
-      <!-- Paso 1: Landing -->
-      <div class="journey-node group relative" data-step="0">
-        <div
-          class="relative bg-white border border-slate-200 rounded-2xl p-6 transition-all duration-300 hover:border-slate-400 hover:shadow-lg hover:-translate-y-1"
-        >
-          <!-- Numeración decorativa de fondo -->
-          <span
-            class="absolute -top-3 -right-2 text-7xl font-bold text-slate-100 select-none pointer-events-none leading-none"
-            >01</span
-          >
+    const moveHighlight = (card) => {
+      if (!card) {
+        highlight.style.opacity = "0";
+        currentCard = null;
+        return;
+      }
 
-          <!-- Indicador de paso (punto en la timeline) -->
-          <div class="relative z-10 flex items-center gap-3 mb-5">
-            <div
-              class="h-3 w-3 rounded-full bg-slate-300 ring-4 ring-white shadow-sm group-hover:bg-slate-500 transition-colors duration-300"
-            >
-            </div>
-            <span
-              class="text-[10px] font-bold tracking-widest text-slate-400 uppercase"
-              >{t("userJourney.step")} 01</span
-            >
-          </div>
+      const rect = card.getBoundingClientRect();
+      const gridRect = grid.getBoundingClientRect();
 
-          <!-- Icono -->
-          <div class="relative z-10 mb-4">
-            <svg
-              class="w-8 h-8 text-slate-400 group-hover:text-slate-700 transition-colors duration-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-              ></path>
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
-          </div>
+      highlight.style.top = `${rect.top - gridRect.top}px`;
+      highlight.style.left = `${rect.left - gridRect.left}px`;
+      highlight.style.width = `${rect.width}px`;
+      highlight.style.height = `${rect.height}px`;
+      highlight.style.opacity = "1";
+    };
 
-          <!-- Contenido -->
-          <h3
-            class="relative z-10 text-lg font-semibold text-slate-700 mb-3 group-hover:text-slate-900 transition-colors duration-300"
-          >
-            {t("userJourney.step1")}
-          </h3>
-          <div class="relative z-10 space-y-2">
-            <div
-              class="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 group-hover:bg-slate-100/80 transition-colors duration-300"
-            >
-              <div class="h-1 w-1 rounded-full bg-slate-300 shrink-0"></div>
-              <p class="text-xs text-slate-500 font-medium">
-                {t("userJourney.step1.1")}
-              </p>
-            </div>
-            <div
-              class="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 group-hover:bg-slate-100/80 transition-colors duration-300"
-            >
-              <div class="h-1 w-1 rounded-full bg-slate-300 shrink-0"></div>
-              <p class="text-xs text-slate-500 font-medium">
-                {t("userJourney.step1.2")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    grid.addEventListener("mouseleave", () => {
+      highlight.style.opacity = "0";
+      currentCard = null;
+    });
 
-      <!-- Paso 2: Explorar -->
-      <div class="journey-node group relative" data-step="1">
-        <div
-          class="relative bg-white border border-slate-200 rounded-2xl p-6 transition-all duration-300 hover:border-slate-400 hover:shadow-lg hover:-translate-y-1"
-        >
-          <span
-            class="absolute -top-3 -right-2 text-7xl font-bold text-slate-100 select-none pointer-events-none leading-none"
-            >02</span
-          >
-
-          <div class="relative z-10 flex items-center gap-3 mb-5">
-            <div
-              class="h-3 w-3 rounded-full bg-slate-300 ring-4 ring-white shadow-sm group-hover:bg-slate-500 transition-colors duration-300"
-            >
-            </div>
-            <span
-              class="text-[10px] font-bold tracking-widest text-slate-400 uppercase"
-              >{t("userJourney.step")} 02</span
-            >
-          </div>
-
-          <div class="relative z-10 mb-4">
-            <svg
-              class="w-8 h-8 text-slate-400 group-hover:text-slate-700 transition-colors duration-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
-              ></path>
-            </svg>
-          </div>
-
-          <h3
-            class="relative z-10 text-lg font-semibold text-slate-700 mb-3 group-hover:text-slate-900 transition-colors duration-300"
-          >
-            {t("userJourney.step2")}
-          </h3>
-          <div class="relative z-10 space-y-2">
-            <div
-              class="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 group-hover:bg-slate-100/80 transition-colors duration-300"
-            >
-              <div class="h-1 w-1 rounded-full bg-slate-300 shrink-0"></div>
-              <p class="text-xs text-slate-500 font-medium">
-                {t("userJourney.step2.1")}
-              </p>
-            </div>
-            <div
-              class="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 group-hover:bg-slate-100/80 transition-colors duration-300"
-            >
-              <div class="h-1 w-1 rounded-full bg-slate-300 shrink-0"></div>
-              <p class="text-xs text-slate-500 font-medium">
-                {t("userJourney.step2.2")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Paso 3: Interacción -->
-      <div class="journey-node group relative" data-step="2">
-        <div
-          class="relative bg-white border border-slate-200 rounded-2xl p-6 transition-all duration-300 hover:border-slate-400 hover:shadow-lg hover:-translate-y-1"
-        >
-          <span
-            class="absolute -top-3 -right-2 text-7xl font-bold text-slate-100 select-none pointer-events-none leading-none"
-            >03</span
-          >
-
-          <div class="relative z-10 flex items-center gap-3 mb-5">
-            <div
-              class="h-3 w-3 rounded-full bg-slate-300 ring-4 ring-white shadow-sm group-hover:bg-slate-500 transition-colors duration-300"
-            >
-            </div>
-            <span
-              class="text-[10px] font-bold tracking-widest text-slate-400 uppercase"
-              >{t("userJourney.step")} 03</span
-            >
-          </div>
-
-          <div class="relative z-10 mb-4">
-            <svg
-              class="w-8 h-8 text-slate-400 group-hover:text-slate-700 transition-colors duration-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"
-              ></path>
-            </svg>
-          </div>
-
-          <h3
-            class="relative z-10 text-lg font-semibold text-slate-700 mb-3 group-hover:text-slate-900 transition-colors duration-300"
-          >
-            {t("userJourney.step3")}
-          </h3>
-          <div class="relative z-10 space-y-2">
-            <div
-              class="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 group-hover:bg-slate-100/80 transition-colors duration-300"
-            >
-              <div class="h-1 w-1 rounded-full bg-slate-300 shrink-0"></div>
-              <p class="text-xs text-slate-500 font-medium">
-                {t("userJourney.step3.1")}
-              </p>
-            </div>
-            <div
-              class="flex items-center gap-2 bg-slate-50 border border-slate-100 rounded-lg px-3 py-2 group-hover:bg-slate-100/80 transition-colors duration-300"
-            >
-              <div class="h-1 w-1 rounded-full bg-slate-300 shrink-0"></div>
-              <p class="text-xs text-slate-500 font-medium">
-                {t("userJourney.step3.2")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Paso 4: Conversión (destacado) -->
-      <div class="journey-node group relative" data-step="3">
-        <div
-          class="relative bg-primary border border-slate-700 rounded-2xl p-6 transition-all duration-300 hover:bg-slate-900 hover:shadow-lg hover:-translate-y-1 overflow-hidden"
-        >
-          <!-- Glow decorativo de fondo -->
-          <div
-            class="absolute -bottom-8 -right-8 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl group-hover:bg-blue-400/30 transition-colors duration-500"
-          >
-          </div>
-
-          <span
-            class="absolute -top-3 -right-2 text-7xl font-bold text-white/5 select-none pointer-events-none leading-none"
-            >04</span
-          >
-
-          <div class="relative z-10 flex items-center gap-3 mb-5">
-            <div
-              class="h-3 w-3 rounded-full bg-white ring-4 ring-primary shadow-sm group-hover:ring-slate-900 transition-colors duration-300"
-            >
-            </div>
-            <span
-              class="text-[10px] font-bold tracking-widest text-slate-400 uppercase"
-              >{t("userJourney.step")} 04</span
-            >
-          </div>
-
-          <div class="relative z-10 mb-4">
-            <svg
-              class="w-8 h-8 text-white/70 group-hover:text-white transition-colors duration-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="1.5"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
-              ></path>
-            </svg>
-          </div>
-
-          <h3 class="relative z-10 text-lg font-semibold text-white mb-3">
-            {t("userJourney.step4")}
-          </h3>
-          <div class="relative z-10 space-y-2">
-            <div
-              class="flex items-center gap-2 bg-white/10 border border-white/10 rounded-lg px-3 py-2 group-hover:bg-white/15 transition-colors duration-300"
-            >
-              <div class="h-1 w-1 rounded-full bg-white/50 shrink-0"></div>
-              <p class="text-xs text-slate-300 font-medium">
-                {t("userJourney.step4.1")}
-              </p>
-            </div>
-            <div
-              class="flex items-center gap-2 bg-white/10 border border-white/10 rounded-lg px-3 py-2 group-hover:bg-white/15 transition-colors duration-300"
-            >
-              <div class="h-1 w-1 rounded-full bg-white/50 shrink-0"></div>
-              <p class="text-xs text-slate-300 font-medium">
-                {t("userJourney.step4.2")}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="max-w-xl mx-auto mt-40">
-    <p class="text-lg font-light text-gray-600 text-center">
-      {t("userJourney.final")}
-    </p>
-  </div>
-</section>
+    cards.forEach((card) => {
+      card.addEventListener("mouseenter", () => {
+        if (card !== currentCard) {
+          currentCard = card;
+          moveHighlight(card);
+        }
+      });
+    });
+  }
+</script>

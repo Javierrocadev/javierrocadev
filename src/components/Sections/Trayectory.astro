@@ -20,62 +20,175 @@ const items = await sanityClient.fetch(`
 const currentYear = String(new Date().getFullYear());
 ---
 
-<section class="bg-white text-black pt-20 pb-40 px-6 lg:px-10">
-  <div class="mx-auto">
-    <div class="max-w-2xl mb-16">
-      <h2 class="text-3xl font-light mb-4">
-        {lang === "es" ? "Recorrido profesional" : "Professional journey"}
-      </h2>
-      <p class="text-lg font-light text-gray-600">
-        {
-          lang === "es"
-            ? "Cada etapa ha sumado una capa nueva a cómo entiendo el desarrollo y el diseño."
-            : "Each stage has added a new layer to how I understand development and design."
-        }
-      </p>
+<section class="bg-white text-black pt-20 pb-40">
+  <div class="max-w-2xl mb-16 px-6 lg:px-10">
+    <h2 class="text-3xl font-light mb-4">
+      {lang === "es" ? "Recorrido profesional" : "Professional journey"}
+    </h2>
+    <p class="text-lg font-light text-gray-600">
+      {
+        lang === "es"
+          ? "Cada etapa ha sumado una capa nueva a cómo entiendo el desarrollo y el diseño."
+          : "Each stage has added a new layer to how I understand development and design."
+      }
+    </p>
+  </div>
+
+  <div id="trajectory-container" class="flex flex-col relative">
+    <!-- El hover-highlight ahora usa gradiente en vez de solid fill -->
+    <div
+      id="hover-highlight"
+      class="absolute left-0 right-0 pointer-events-none transition-all duration-300 ease-out opacity-0"
+      style="background: linear-gradient(to right, rgb(235, 242, 252) 0%, transparent 70%); height: 0; top: 0;"
+    >
     </div>
 
-    <div class="flex flex-col">
-      {
-        items.map((item, index) => (
+    {
+      items.map((item, index) => {
+        const isCurrent = String(item.date).includes(currentYear);
+        return (
           <div
-            class={`grid grid-cols-12 gap-6 py-10 border-t border-gray-200 ${
-              index === items.length - 1 ? "border-b" : ""
-            }`}
+            class={`trajectory-item relative z-10 transition-colors duration-300 border-t border-gray-200 ${
+              index === items.length - 1 ? "border-b border-gray-200" : ""
+            } ${item.featured ? "current-item" : ""}`}
           >
-            <div class="col-span-12 md:col-span-5">
-              <h3 class="text-2xl font-light mb-1 text-black">
-                {item.title?.[lang] ?? item.title?.es}
-              </h3>
-              <span class="text-sm font-light text-gray-400">
-                {item.subtitle?.[lang] ?? item.subtitle?.es}
-              </span>
-            </div>
+            <div class="mx-auto px-6 lg:px-10">
+              <div class="grid grid-cols-12 gap-6 py-10">
+                <div class="col-span-12 md:col-span-5">
+                  <h3
+                    class={`text-2xl font-light mb-1 transition-colors duration-300 ${
+                      item.featured ? "text-primary font-medium" : "text-black"
+                    }`}
+                  >
+                    {item.title?.[lang] ?? item.title?.es}
+                  </h3>
+                  <span class="text-sm font-light transition-colors duration-300 text-gray-400">
+                    {item.subtitle?.[lang] ?? item.subtitle?.es}
+                  </span>
+                </div>
 
-            <div class="col-span-4 md:col-span-2">
-              <span
-                class={`text-2xl font-sans ${String(item.date).includes(currentYear) ? "text-primary font-semibold" : "text-gray-300"}`}
-              >
-                {String(item.date).includes(currentYear)
-                  ? lang === "es"
-                    ? "Ahora"
-                    : "Now"
-                  : item.date}
-              </span>
-            </div>
+                <div class="col-span-4 md:col-span-2">
+                  <span
+                    class={`text-2xl font-sans transition-colors duration-300 ${
+                      isCurrent ? "text-primary font-medium" : "text-gray-300"
+                    }`}
+                  >
+                    {isCurrent ? (lang === "es" ? "Ahora" : "Now") : item.date}
+                  </span>
+                </div>
 
-            <div class="col-span-12 md:col-span-5">
-              <p
-                class={`text-base font-light leading-relaxed ${
-                  item.featured === false ? "text-gray-400" : "text-gray-600"
-                }`}
-              >
-                {item.description?.[lang] ?? item.description?.es}
-              </p>
+                <div class="col-span-12 md:col-span-5">
+                  <p
+                    class={`text-base font-light leading-relaxed transition-colors duration-300 text-gray-700`}
+                  >
+                    {item.description?.[lang] ?? item.description?.es}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-        ))
-      }
-    </div>
+        );
+      })
+    }
   </div>
 </section>
+
+<style>
+  /* Fondo sutil para el item current — gradiente muy tenue de izquierda */
+  .current-item {
+    background: none;
+  }
+
+  .current-item::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #f9fafb 0%, rgba(21, 45, 67, 0) 72%);
+    mask-image: radial-gradient(
+      ellipse 88% 130% at 0% 50%,
+      black 55%,
+      transparent 100%
+    );
+    -webkit-mask-image: radial-gradient(
+      ellipse 88% 130% at 0% 50%,
+      black 55%,
+      transparent 100%
+    );
+    z-index: -20;
+    pointer-events: none;
+  }
+
+  @media (max-width: 767px) {
+    .current-item::after {
+      background: #152d43;
+      mask-image: none;
+      -webkit-mask-image: none;
+    }
+
+    .current-item * {
+      color: white !important;
+    }
+  }
+
+  .trajectory-item > div {
+    transition: transform 0.3s ease-out;
+  }
+
+  .trajectory-item:hover > div {
+    transform: translateX(12px);
+  }
+</style>
+
+<script>
+  const container = document.getElementById("trajectory-container");
+  const highlight = document.getElementById("hover-highlight");
+
+  if (container && highlight) {
+    let currentItem = null;
+    let rafId = null;
+
+    const moveHighlight = (item) => {
+      if (!item) {
+        highlight.style.opacity = "0";
+        currentItem = null;
+        return;
+      }
+
+      const itemRect = item.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+
+      highlight.style.top = `${itemRect.top - containerRect.top}px`;
+      highlight.style.height = `${itemRect.height}px`;
+      highlight.style.opacity = "1";
+    };
+
+    container.addEventListener("mouseleave", () => {
+      highlight.style.opacity = "0";
+      currentItem = null;
+    });
+
+    container.addEventListener("mousemove", (e) => {
+      if (rafId) return;
+
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+
+        const items = container.querySelectorAll(".trajectory-item");
+        let target = null;
+
+        for (const item of items) {
+          const rect = item.getBoundingClientRect();
+          if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
+            target = item;
+            break;
+          }
+        }
+
+        if (target !== currentItem) {
+          currentItem = target;
+          moveHighlight(target);
+        }
+      });
+    });
+  }
+</script>
