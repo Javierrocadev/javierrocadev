@@ -16,20 +16,25 @@ const projects = [
     url: "https://uiverse.io/profile/Javierrocadev",
   },
   {
-    title: "LOGO",
-    description: t("projects.logo"),
-  },
-  {
-    title: "PRIVATE PORTFOLIO",
+    title: "GRAPHIC DESIGNER PORTFOLIO",
     image: { src: "/images/sandraguillen.webp", alt: "Private Portfolio" },
     description: t("projects.privatePortfolio"),
     url: "https://sandraguillen.com/",
   },
   {
-    title: "TAILSNIPPETS",
-    image: { src: "/images/tailsnippet.png", alt: "TailSnippets" },
-    description: t("projects.tailSnippets"),
-    url: "https://tailsnippets.vercel.app/",
+    title: "ONETASK",
+    image: { src: "/images/onetask.png", alt: "OneTask" },
+    description: t("projects.helpleo"),
+  },
+  {
+    title: "MYTHINGSTODO",
+    image: { src: "/images/mttd.png", alt: "MyThingsToDo" },
+    description: t("projects.myThingsToDo"),
+    url: "https://github.com/Javierrocadev/mythingstodo",
+  },
+  {
+    title: "LOGO",
+    description: t("projects.logo"),
   },
   {
     title: "BENTO PORTFOLIO",
@@ -38,9 +43,10 @@ const projects = [
     url: "https://jrdevportfolio.vercel.app/",
   },
   {
-    title: "HELPLEO",
-    image: { src: "/images/helpleo.png", alt: "Helpleo" },
-    description: t("projects.helpleo"),
+    title: "TAILSNIPPETS",
+    image: { src: "/images/tailsnippet.png", alt: "TailSnippets" },
+    description: t("projects.tailSnippets"),
+    url: "https://tailsnippets.vercel.app/",
   },
 ];
 
@@ -64,8 +70,8 @@ const projectsData = projects.map((p, i) => ({
         {
           projects.map((project, index) => (
             <h2
-              class={`text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none
-              ${index === 0 ? "font-semibold text-black" : "font-light text-gray-400 hover:text-gray-600"}`}
+              class={`relative w-fit text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-primary after:transition-[width] after:duration-300 hover:after:w-[var(--underline-width)]
+              ${index === 0 ? "font-semibold text-primary" : "font-light text-gray-400 hover:text-gray-600"}`}
               data-index={index}
               onclick="selectProject(this)"
             >
@@ -145,6 +151,22 @@ const projectsData = projects.map((p, i) => ({
   // Duración del fade en ms — debe coincidir con duration-300 de Tailwind (300ms)
   const FADE_DURATION = 300;
 
+  const updateUnderlineWidths = () => {
+    document.querySelectorAll("#project-titles h2").forEach((title) => {
+      const range = document.createRange();
+      range.selectNodeContents(title);
+      const widths = Array.from(range.getClientRects()).map((rect) => rect.width);
+
+      title.style.setProperty(
+        "--underline-width",
+        `${Math.max(...widths, 0)}px`,
+      );
+    });
+  };
+
+  updateUnderlineWidths();
+  window.addEventListener("resize", updateUnderlineWidths);
+
   window.selectProject = function (el) {
     const index = Number(el.dataset.index);
     const project = projects[index];
@@ -156,8 +178,8 @@ const projectsData = projects.map((p, i) => ({
     document.querySelectorAll("#project-titles h2").forEach((h, i) => {
       h.className =
         i === index
-          ? "text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none font-semibold text-black"
-          : "text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none font-light text-gray-400 hover:text-gray-600";
+          ? "relative w-fit text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-primary after:transition-[width] after:duration-300 hover:after:w-[var(--underline-width)] font-semibold text-primary"
+          : "relative w-fit text-3xl mb-4 cursor-pointer transition-colors duration-300 select-none after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-primary after:transition-[width] after:duration-300 hover:after:w-[var(--underline-width)] font-light text-gray-400 hover:text-gray-600";
     });
 
     // 2) Fade out visual + descripción

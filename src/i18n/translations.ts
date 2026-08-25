@@ -35,6 +35,8 @@ export const translations = {
     "projects.logo": "Diseño de logo de Javier Roca.",
     "projects.tailSnippets": "Snippets de código para maquetación y diseño.",
     "projects.bento": "Bento portfolio. Interactivo y moderno.",
+    "projects.myThingsToDo":
+      "(MVP) - MyThingsToDo. App de productividad con acompañante virtual y priorización de tareas asistida por IA (Gemini). Versión de validación previa al desarrollo de la app definitiva.",
     "projects.helpleo":
       "App para realizar una sola tarea al día. En desarrollo...",
     "projects.privatePortfolio":
@@ -140,6 +142,8 @@ export const translations = {
     "projects.logo": "Logo design of Javier Roca.",
     "projects.tailSnippets": "Code snippets for layout and design.",
     "projects.bento": "Bento portfolio. Interactive and modern.",
+    "projects.myThingsToDo":
+      "(MVP) – MyThingsToDo. A productivity app featuring a virtual assistant and AI-assisted task prioritisation (Gemini). A validation version prior to the development of the final app.",
     "projects.helpleo": "App to perform a single task a day. In development...",
     "projects.privatePortfolio":
       "Private portfolio for designer and visual artist.",
