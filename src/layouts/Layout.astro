@@ -1,5 +1,6 @@
 ---
  import '../styles/global.css'
+ import { ClientRouter } from 'astro:transitions';
  import Nav from "../components/Sections/Nav.astro";
  import { getLangFromUrl } from '../i18n/utils'
  const lang = getLangFromUrl(Astro.url);
@@ -34,11 +35,11 @@ interface Props {
 <meta property="twitter:url" content="https://jrdevportfolio.vercel.app/">
 <meta name="twitter:title" content="Javierrocadev">
 <meta name="twitter:description" content="Portafolio de Javier Roca, UI designer - Frontend Developer en Madrid">
-<meta name="twitter:image" content="/logo.svg">
+		<meta name="twitter:image" content="/logo.svg">
+		<ClientRouter />
 	</head>
 	<body>
 		<Nav lang={lang} />
 		<slot />
 	</body>
 </html>
-

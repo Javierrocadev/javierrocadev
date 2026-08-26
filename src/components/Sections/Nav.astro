@@ -41,7 +41,7 @@ const t = useTranslations(lang);
     }
   }
 </style>
-<nav>
+<nav transition:persist={`navigation-${currentLang}`}>
   <div class="menu-bar">
     <div class="menu-logo">
       <a href={currentLang === "es" ? "/" : "/en"} class="menu-logo-flex">
@@ -77,15 +77,15 @@ const t = useTranslations(lang);
         <span class="hidden sm:block">Javierrocadev</span></a>
       </div>
       <div class="hidden lg:flex items-center gap-8 flex-1 justify-center">
-        <a href={currentLang === 'es' ? '/' : '/en'} class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
+        <a href={currentLang === 'es' ? '/' : '/en'} data-page-path="/" class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
           {t('nav.home')}
           <span class={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-primary transition-all duration-300 ${isActive('/') ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </a>
-        <a href={currentLang === 'es' ? '/aboutme' : '/en/aboutme'} class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/aboutme') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
+        <a href={currentLang === 'es' ? '/aboutme' : '/en/aboutme'} data-page-path="/aboutme" class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/aboutme') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
           {t('nav.about')}
           <span class={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-primary transition-all duration-300 ${isActive('/aboutme') ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </a>
-        <a href={currentLang === 'es' ? '/process' : '/en/process'} class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/process') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
+        <a href={currentLang === 'es' ? '/process' : '/en/process'} data-page-path="/process" class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/process') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
           {t('nav.process')}
           <span class={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-primary transition-all duration-300 ${isActive('/process') ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </a>
@@ -220,3 +220,26 @@ const t = useTranslations(lang);
 </nav>
 
 <script src="../../../src/scripts/navMenu.js"></script>
+
+<script is:inline>
+  function updateActiveNavigation() {
+    const path = window.location.pathname
+      .replace(/^\/en(?=\/|$)/, "")
+      .replace(/\/+$/, "") || "/";
+
+    document.querySelectorAll("[data-page-path]").forEach((link) => {
+      const active = link.getAttribute("data-page-path") === path;
+      const indicator = link.querySelector("span");
+
+      link.classList.toggle("text-primary", active);
+      link.classList.toggle("text-gray-700", !active);
+      if (indicator) {
+        indicator.classList.toggle("w-full", active);
+        indicator.classList.toggle("w-0", !active);
+      }
+    });
+  }
+
+  updateActiveNavigation();
+  document.addEventListener("astro:page-load", updateActiveNavigation);
+</script>
