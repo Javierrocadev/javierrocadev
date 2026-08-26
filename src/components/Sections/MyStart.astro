@@ -28,19 +28,23 @@ const t = useTranslations(lang);
                 <img
           src={Comp1.src}
           alt="competicion de lego"
+          class="my-start-image"
+          style="--reveal-delay: 0ms"
         />
             </div>
             <div class="w-full flex flex-col items-end gap-4">
                 <img
           src={Comp3.src}
           alt="competicion de lego"
-          class="w-fit h-fit"
+          class="my-start-image w-fit h-fit"
+          style="--reveal-delay: 120ms"
         />
         <div class="w-full flex items-center justify-center">
                 <img
           src={Comp2.src}
           alt="competicion de lego"
-          class="w-fit h-fit"
+          class="my-start-image w-fit h-fit"
+          style="--reveal-delay: 240ms"
         />
         </div>
             </div>
@@ -48,3 +52,48 @@ const t = useTranslations(lang);
 
  
     </section>
+
+<style>
+  .my-start-image {
+    opacity: 0;
+    transform: translateY(3rem);
+    transition: opacity 700ms ease-out var(--reveal-delay, 0ms), transform 700ms ease-out var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .my-start-image.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .my-start-image {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const images = document.querySelectorAll<HTMLImageElement>(".my-start-image");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (reducedMotion.matches) {
+    images.forEach((image) => image.classList.add("is-visible"));
+  } else {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.15 },
+    );
+
+    images.forEach((image) => observer.observe(image));
+  }
+</script>
