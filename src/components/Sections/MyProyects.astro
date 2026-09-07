@@ -1,5 +1,7 @@
 ---
 import LogoCard from "./LogoCard.astro";
+import logoSvg from "/public/favicon.svg?raw";
+const logoPath = logoSvg.match(/\bd="([^"]+)"/)?.[1];
 interface Props {
   lang: "es" | "en";
 }
@@ -88,6 +90,13 @@ const projectsData = projects.map((p, i) => ({
         <div
           class="min-h-96 relative w-full h-full flex flex-col gap-4 justify-center items-center xl:p-16 p-4"
         >
+          <div id="project-loading" role="status" aria-live="polite" aria-hidden="true">
+            <svg viewBox="0 0 28 16" aria-hidden="true">
+              <path d={logoPath} class="loading-base" />
+              <path d={logoPath} pathLength="360" class="dash-normal" />
+              <path d={logoPath} pathLength="360" class="dash-reverse" />
+            </svg>
+          </div>
           <!-- Wrapper que controla el fade de imagen/logo -->
           <div
             id="project-visual"
@@ -131,6 +140,56 @@ const projectsData = projects.map((p, i) => ({
   </div>
 </section>
 
+<style>
+  #project-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 200ms ease, visibility 0s linear 200ms;
+  }
+
+  #project-loading.is-loading {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  #project-loading svg {
+    width: 72px;
+    height: auto;
+    overflow: visible;
+    opacity: 0.45;
+  }
+
+  #project-loading path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 0.6;
+    stroke-linecap: round;
+    animation-play-state: paused;
+  }
+
+  #project-loading.is-loading path {
+    animation-play-state: running;
+  }
+
+  #project-loading .loading-base { opacity: 0.15; }
+
+
+  @media (prefers-reduced-motion: reduce) {
+    #project-loading { transition: none; }
+    #project-loading path { animation: none; }
+    #project-visual, #project-description { transition: none; }
+  }
+</style>
+
 <script
   id="projects-data"
   type="application/json"
@@ -147,6 +206,7 @@ const projectsData = projects.map((p, i) => ({
     let fadeTimeout;
     let fadeFrame;
     let selectionVersion = 0;
+    let loadingTimeout;
 
   const projects = JSON.parse(
     document.getElementById("projects-data").textContent,
@@ -157,6 +217,36 @@ const projectsData = projects.map((p, i) => ({
   const linkEl = document.getElementById("project-link");
   const logoEl = document.getElementById("project-logocard");
   const descriptionEl = document.getElementById("project-description");
+  const loadingEl = document.getElementById("project-loading");
+
+  const hideLoading = () => {
+    clearTimeout(loadingTimeout);
+    loadingEl.classList.remove("is-loading");
+    loadingEl.setAttribute("aria-hidden", "true");
+  };
+
+  const trackLoading = (ready: Promise<boolean>, version: number) => {
+    hideLoading();
+    loadingTimeout = setTimeout(() => {
+      if (!controller.signal.aborted && version === selectionVersion) {
+        loadingEl.classList.add("is-loading");
+        loadingEl.setAttribute("aria-hidden", "false");
+      }
+    }, 180);
+    void ready.then(() => {
+      if (!controller.signal.aborted && version === selectionVersion) {
+        clearTimeout(loadingTimeout);
+      }
+    });
+  };
+
+  if (!imgEl.complete) {
+    const initialReady = imgEl.decode().then(() => true, () => false);
+    trackLoading(initialReady, 0);
+    void initialReady.then(() => {
+      if (!controller.signal.aborted && selectionVersion === 0) hideLoading();
+    });
+  }
 
   // Duración del fade en ms — debe coincidir con duration-300 de Tailwind (300ms)
   const FADE_DURATION = 300;
@@ -197,6 +287,7 @@ const projectsData = projects.map((p, i) => ({
           return nextImage.decode().then(() => true, () => false);
         })()
       : Promise.resolve(true);
+    trackLoading(imageReady, version);
 
     // 1) Títulos: activo en negro, resto en gris
     document.querySelectorAll("#project-titles h2").forEach((h, i) => {
@@ -253,6 +344,7 @@ const projectsData = projects.map((p, i) => ({
       // Fade in (se necesita un frame para que el navegador registre el cambio)
       fadeFrame = requestAnimationFrame(() => {
         if (controller.signal.aborted || version !== selectionVersion) return;
+        hideLoading();
         visualEl.classList.remove("opacity-0");
         descriptionEl.classList.remove("opacity-0");
       });
@@ -260,6 +352,7 @@ const projectsData = projects.map((p, i) => ({
   };
     cleanupProjects = () => {
       controller.abort();
+      hideLoading();
       clearTimeout(fadeTimeout);
       cancelAnimationFrame(fadeFrame);
       delete window.selectProject;
