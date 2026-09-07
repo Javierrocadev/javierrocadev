@@ -11,7 +11,7 @@ const t = useTranslations(lang);
 const projects = [
   {
     title: "OPEN SOURCE COMPONENTS",
-    image: { src: "/images/uiversevideocover.jpg", alt: "Uiverse Video Cover" },
+    image: { src: "/images/uiversevideocover.webp", alt: "Uiverse Video Cover" },
     description: t("projects.carousel"),
     url: "https://uiverse.io/profile/Javierrocadev",
   },
@@ -23,12 +23,12 @@ const projects = [
   },
   {
     title: "ONETASK",
-    image: { src: "/images/onetask.png", alt: "OneTask" },
+    image: { src: "/images/onetask.webp", alt: "OneTask" },
     description: t("projects.helpleo"),
   },
   {
     title: "MYTHINGSTODO",
-    image: { src: "/images/mttd.png", alt: "MyThingsToDo" },
+    image: { src: "/images/mttd.webp", alt: "MyThingsToDo" },
     description: t("projects.myThingsToDo"),
     url: "https://github.com/Javierrocadev/mythingstodo",
   },
@@ -38,13 +38,13 @@ const projects = [
   },
   {
     title: "BENTO PORTFOLIO",
-    image: { src: "/images/bentoportfolio.png", alt: "Bento Portfolio" },
+    image: { src: "/images/bentoportfolio.webp", alt: "Bento Portfolio" },
     description: t("projects.bento"),
     url: "https://jrdevportfolio.vercel.app/",
   },
   {
     title: "TAILSNIPPETS",
-    image: { src: "/images/tailsnippet.png", alt: "TailSnippets" },
+    image: { src: "/images/tailsnippet.webp", alt: "TailSnippets" },
     description: t("projects.tailSnippets"),
     url: "https://tailsnippets.vercel.app/",
   },
@@ -146,13 +146,14 @@ const projectsData = projects.map((p, i) => ({
     const controller = new AbortController();
     let fadeTimeout;
     let fadeFrame;
+    let selectionVersion = 0;
 
   const projects = JSON.parse(
     document.getElementById("projects-data").textContent,
   );
 
   const visualEl = document.getElementById("project-visual");
-  const imgEl = document.getElementById("project-image");
+  let imgEl = document.getElementById("project-image") as HTMLImageElement;
   const linkEl = document.getElementById("project-link");
   const logoEl = document.getElementById("project-logocard");
   const descriptionEl = document.getElementById("project-description");
@@ -185,6 +186,17 @@ const projectsData = projects.map((p, i) => ({
 
     // Si ya está seleccionado, no hacer nada
     if (el.classList.contains("font-semibold")) return;
+    const version = ++selectionVersion;
+
+    // Cargar una imagen independiente para no conservar los píxeles anteriores.
+    const nextImage = project.hasComponent ? null : imgEl.cloneNode(false) as HTMLImageElement;
+    const imageReady = nextImage
+      ? (() => {
+          nextImage.src = project.image?.src ?? "";
+          nextImage.alt = project.image?.alt ?? "";
+          return nextImage.decode().then(() => true, () => false);
+        })()
+      : Promise.resolve(true);
 
     // 1) Títulos: activo en negro, resto en gris
     document.querySelectorAll("#project-titles h2").forEach((h, i) => {
@@ -201,7 +213,10 @@ const projectsData = projects.map((p, i) => ({
     // 3) Tras el fade out, swap de contenido y fade in
     clearTimeout(fadeTimeout);
     cancelAnimationFrame(fadeFrame);
-    fadeTimeout = setTimeout(() => {
+    fadeTimeout = setTimeout(async () => {
+      const loaded = await imageReady;
+      if (controller.signal.aborted || version !== selectionVersion) return;
+
       // Ocultar todo primero
       imgEl.classList.add("hidden");
       logoEl.classList.add("hidden");
@@ -213,9 +228,14 @@ const projectsData = projects.map((p, i) => ({
       } else {
         // Mostrar imagen
         linkEl.classList.remove("hidden");
-        imgEl.classList.remove("hidden");
-        imgEl.src = project.image?.src ?? "";
-        imgEl.alt = project.image?.alt ?? "";
+        if (loaded && nextImage) {
+          nextImage.classList.remove("hidden");
+          imgEl.replaceWith(nextImage);
+          imgEl = nextImage;
+        } else {
+          // No mostrar la imagen anterior si la nueva no se puede cargar.
+          linkEl.classList.add("hidden");
+        }
 
         // Activar o desactivar el enlace según haya URL
         if (project.url) {
@@ -232,6 +252,7 @@ const projectsData = projects.map((p, i) => ({
 
       // Fade in (se necesita un frame para que el navegador registre el cambio)
       fadeFrame = requestAnimationFrame(() => {
+        if (controller.signal.aborted || version !== selectionVersion) return;
         visualEl.classList.remove("opacity-0");
         descriptionEl.classList.remove("opacity-0");
       });
