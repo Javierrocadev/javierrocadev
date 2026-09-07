@@ -2,7 +2,7 @@
 import { getLangFromUrl, useTranslations } from "../../i18n/utils";
 
 const currentLang = getLangFromUrl(Astro.url);
-const currentPath = Astro.url.pathname.replace(/^\/en/, "") || "/";
+const currentPath = Astro.url.pathname.replace(/^\/en(?=\/|$)/, "") || "/";
 
 const isActive = (path: string) => currentPath === path;
 
@@ -223,6 +223,15 @@ const t = useTranslations(lang);
 
 <script is:inline>
   function updateActiveNavigation() {
+    // El navbar persiste entre páginas: recalcular también los enlaces de idioma.
+    const currentPath = window.location.pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+    const isEnglish = /^\/en(?=\/|$)/.test(window.location.pathname);
+    const translatedPath = isEnglish ? currentPath : `/en${currentPath}`;
+
+    document.querySelectorAll("nav .lang-button").forEach((link) => {
+      link.setAttribute("href", translatedPath);
+    });
+
     const path = window.location.pathname
       .replace(/^\/en(?=\/|$)/, "")
       .replace(/\/+$/, "") || "/";

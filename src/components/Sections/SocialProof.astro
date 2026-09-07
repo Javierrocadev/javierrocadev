@@ -11,17 +11,17 @@ const compactCards = [
   {
     id: "relentless",
     title: "Relentless",
-    duration: "3 Meses",
+    duration: t("socialProof.duration.threeMonths"),
     description:
-      "Landing page with interactive components and modern UI design.",
+      t("socialProof.relentless.description"),
     stats: [
       {
         value: "Wordpress",
-        label: "Landing page, componentes interactivos",
+        label: t("socialProof.relentless.components"),
       },
       {
         value: "Tailwind, Css",
-        label: "Creación e implementación de diseños atractivos",
+        label: t("socialProof.design"),
       },
     ],
     tags: ["Wordpress", "Divi", "Tailwind"],
@@ -29,12 +29,12 @@ const compactCards = [
   {
     id: "uiverse",
     title: "Uiverse",
-    duration: "3 meses",
+    duration: t("socialProof.duration.threeMonths"),
     description:
-      "Open source UI components shared with the developer community.",
+      t("socialProof.uiverse.description"),
     stats: [
-      { value: "Front-end y Diseñador web", label: "Diseño y desarrollo" },
-      { value: "Email", label: "Plantilla con Tailwind" },
+      { value: t("socialProof.uiverse.role"), label: t("socialProof.uiverse.designDevelopment") },
+      { value: "Email", label: t("socialProof.uiverse.emailTemplate") },
     ],
     tags: ["React", "TypeScript", "Tailwind"],
   },
@@ -42,20 +42,20 @@ const compactCards = [
 
 const featuredCard = {
   title: "MyPublicInbox",
-  duration: "2 años - Actualidad",
+  duration: t("socialProof.myPublicInbox.duration"),
   description:
-    "Public inbox tool for receiving feedback and messages. Currently in active development.",
+    t("socialProof.myPublicInbox.description"),
   stats: [
     {
       value: "React, TypeScript",
-      label: "Desarrollo de componentes y páginas web",
+      label: t("socialProof.myPublicInbox.components"),
     },
     {
       value: "Figma, Material UI, Tailwind",
-      label: "Creación e implementación de diseños atractivos",
+      label: t("socialProof.design"),
     },
-    { value: "Migraciones ", label: "React 18 y MUI" },
-    { value: ".Net, Cypress", label: "Backend and testing" },
+    { value: t("socialProof.myPublicInbox.migrations"), label: t("socialProof.myPublicInbox.migrationTools") },
+    { value: ".Net, Cypress", label: t("socialProof.myPublicInbox.backendTesting") },
   ],
   tags: [
     "React",

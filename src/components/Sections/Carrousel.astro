@@ -85,8 +85,8 @@ const t = useTranslations(lang);
     </section>
 
     <!-- Carga de Keen Slider y Lógica JS -->
- <script type="module">
-    import KeenSlider from 'https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/+esm';
+ <script>
+    import KeenSlider from 'keen-slider';
 
     // 🌟 CORRECCIÓN CLAVE: Definimos las rutas como CADENAS DE TEXTO con ruta ABSOLUTA
     // Esto funciona porque las imágenes están en la carpeta 'public'.
@@ -102,12 +102,17 @@ const t = useTranslations(lang);
     const Component10 = "/images/Comp10.gif";
     const Component11 = "/images/Comp11.gif";
     
-    document.addEventListener('DOMContentLoaded', () => {
+    let cleanupCarousel = () => {};
+
+    function initializeCarousel() {
+        cleanupCarousel();
         const sliderElement = document.getElementById("keen-slider");
         const arrowLeft = document.getElementById("arrow-left");
         const arrowRight = document.getElementById("arrow-right");
 
         if (!sliderElement) return;
+
+        const controller = new AbortController();
 
       
         const technologies = [
@@ -206,12 +211,21 @@ function createSlides(techArray) {
         if (arrowLeft && slider.track) {
             arrowLeft.addEventListener("click", () => {
                 slider.moveToIdx(slider.track.details.abs - 1, true, { duration: 500, easing: (t) => t });
-            });
+            }, { signal: controller.signal });
         }
         if (arrowRight && slider.track) {
             arrowRight.addEventListener("click", () => {
                 slider.moveToIdx(slider.track.details.abs + 1, true, { duration: 500, easing: (t) => t });
-            });
+            }, { signal: controller.signal });
         }
-    });
+
+        cleanupCarousel = () => {
+            controller.abort();
+            slider.destroy();
+            cleanupCarousel = () => {};
+        };
+    }
+
+    document.addEventListener('astro:page-load', initializeCarousel);
+    document.addEventListener('astro:before-swap', () => cleanupCarousel());
 </script>

@@ -140,10 +140,15 @@ const currentYear = String(new Date().getFullYear());
 </style>
 
 <script>
+  let cleanupTrajectory = () => {};
+
+  function initializeTrajectory() {
+    cleanupTrajectory();
   const container = document.getElementById("trajectory-container");
   const highlight = document.getElementById("hover-highlight");
 
   if (container && highlight) {
+    const controller = new AbortController();
     let currentItem = null;
     let rafId = null;
 
@@ -163,9 +168,11 @@ const currentYear = String(new Date().getFullYear());
     };
 
     container.addEventListener("mouseleave", () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = null;
       highlight.style.opacity = "0";
       currentItem = null;
-    });
+    }, { signal: controller.signal });
 
     container.addEventListener("mousemove", (e) => {
       if (rafId) return;
@@ -189,6 +196,16 @@ const currentYear = String(new Date().getFullYear());
           moveHighlight(target);
         }
       });
-    });
+    }, { signal: controller.signal });
+
+    cleanupTrajectory = () => {
+      controller.abort();
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      cleanupTrajectory = () => {};
+    };
   }
+  }
+
+  document.addEventListener("astro:page-load", initializeTrajectory);
+  document.addEventListener("astro:before-swap", () => cleanupTrajectory());
 </script>

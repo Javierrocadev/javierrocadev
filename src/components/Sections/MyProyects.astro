@@ -138,6 +138,15 @@ const projectsData = projects.map((p, i) => ({
 />
 
 <script>
+  let cleanupProjects = () => {};
+
+  function initializeProjects() {
+    cleanupProjects();
+    if (!document.getElementById("projects-data")) return;
+    const controller = new AbortController();
+    let fadeTimeout;
+    let fadeFrame;
+
   const projects = JSON.parse(
     document.getElementById("projects-data").textContent,
   );
@@ -165,7 +174,10 @@ const projectsData = projects.map((p, i) => ({
   };
 
   updateUnderlineWidths();
-  window.addEventListener("resize", updateUnderlineWidths);
+  window.addEventListener("resize", updateUnderlineWidths, { signal: controller.signal });
+  document.fonts.ready.then(() => {
+    if (!controller.signal.aborted) updateUnderlineWidths();
+  });
 
   window.selectProject = function (el) {
     const index = Number(el.dataset.index);
@@ -187,7 +199,9 @@ const projectsData = projects.map((p, i) => ({
     descriptionEl.classList.add("opacity-0");
 
     // 3) Tras el fade out, swap de contenido y fade in
-    setTimeout(() => {
+    clearTimeout(fadeTimeout);
+    cancelAnimationFrame(fadeFrame);
+    fadeTimeout = setTimeout(() => {
       // Ocultar todo primero
       imgEl.classList.add("hidden");
       logoEl.classList.add("hidden");
@@ -217,10 +231,21 @@ const projectsData = projects.map((p, i) => ({
       descriptionEl.textContent = project.description;
 
       // Fade in (se necesita un frame para que el navegador registre el cambio)
-      requestAnimationFrame(() => {
+      fadeFrame = requestAnimationFrame(() => {
         visualEl.classList.remove("opacity-0");
         descriptionEl.classList.remove("opacity-0");
       });
     }, FADE_DURATION);
   };
+    cleanupProjects = () => {
+      controller.abort();
+      clearTimeout(fadeTimeout);
+      cancelAnimationFrame(fadeFrame);
+      delete window.selectProject;
+      cleanupProjects = () => {};
+    };
+  }
+
+  document.addEventListener("astro:page-load", initializeProjects);
+  document.addEventListener("astro:before-swap", () => cleanupProjects());
 </script>
