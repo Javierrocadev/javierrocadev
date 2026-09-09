@@ -15,7 +15,7 @@ export const translations = {
     "hero.title": "Creando interfaces simples para usuarios complejos.",
     "hero.title2": "Full-Stack Developer · Front-End Focus · AI-Accelerated Development",
     "hero.projects": "Proyectos",
-    "hero.contact": "Contactemos...",
+    "hero.contact": "Conectemos...",
     "socialProof.title": "Aportando mi visión",
     "socialProof.text":
       "He creado componentes y soluciones de diseño para diferentes proyectos y empresas, enfocando siempre la solución en la experiencia de usuario.",
