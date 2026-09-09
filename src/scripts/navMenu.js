@@ -76,7 +76,7 @@ if (typeof document !== "undefined") {
               .to(
                 container,
                 {
-                  y: "100svh",
+                  y: "100dvh",
                   duration: 1,
                   ease: "hop",
                 },
@@ -231,4 +231,3 @@ if (typeof document !== "undefined") {
       document.addEventListener("astro:page-load", initializeMenu);
       document.addEventListener("astro:before-swap", () => cleanupMenu());
 }
-
