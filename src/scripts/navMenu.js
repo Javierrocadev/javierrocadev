@@ -3,16 +3,22 @@ import { CustomEase } from "gsap/CustomEase";
 import { SplitText } from "gsap/SplitText";
 import Lenis from "lenis";
 if (typeof document !== "undefined") {
-    document.addEventListener("DOMContentLoaded", () => {
+    let cleanupMenu = () => {};
+    function initializeMenu() {
+        cleanupMenu();
+        if (!document.querySelector(".menu-toggle-btn")) return;
+        const controller = new AbortController();
+        let timeline;
+        let rafId;
         gsap.registerPlugin(CustomEase, SplitText);
         CustomEase.create("hop", ".87,0,.13,1");
       
         const lenis = new Lenis();
         function raf(time) {
           lenis.raf(time);
-          requestAnimationFrame(raf);
+          rafId = requestAnimationFrame(raf);
         }
-        requestAnimationFrame(raf);
+        rafId = requestAnimationFrame(raf);
       
         const textContainers = document.querySelectorAll(".menu-col");
         let splitTextByContainer = [];
@@ -35,7 +41,7 @@ if (typeof document !== "undefined") {
           splitTextByContainer.push(containerSplits);
         });
       
-        const container = document.querySelector(".main-container");
+        const container = document.querySelector(".main-container") || document.querySelector("main");
         const menuToggleBtn = document.querySelector(".menu-toggle-btn");
         const menuOverlay = document.querySelector(".menu-overlay");
         const menuOverlayContainer = document.querySelector(".menu-overlay-content");
@@ -48,7 +54,7 @@ if (typeof document !== "undefined") {
         let isAnimating = false;
       
         menuToggleBtn.addEventListener("click", () => {
-          console.log("Botón clickeado!");
+
           if (isAnimating) return;
       
           if (!isMenuOpen) {
@@ -56,7 +62,7 @@ if (typeof document !== "undefined") {
       
             lenis.stop();
       
-            const tl = gsap.timeline();
+            const tl = timeline = gsap.timeline();
       
             tl.to(
               menuToggleLabel,
@@ -130,7 +136,7 @@ if (typeof document !== "undefined") {
             isAnimating = true;
       
             hamburgerIcon.classList.remove("active");
-            const tl = gsap.timeline();
+            const tl = timeline = gsap.timeline();
       
             tl.to(container, {
               y: "0svh",
@@ -189,7 +195,40 @@ if (typeof document !== "undefined") {
       
             isMenuOpen = false;
           }
-        });
-      });
+        }, { signal: controller.signal });
+
+        function resetMenu() {
+          timeline?.kill();
+          if (container) gsap.set(container, { clearProps: "transform" });
+          gsap.set(menuOverlay, { clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" });
+          gsap.set(menuOverlayContainer, { yPercent: -50 });
+          gsap.set(menuToggleLabel, { y: "0%" });
+          gsap.set(copyContainers, { opacity: 1 });
+          gsap.set(menuMediaWrapper, { opacity: 0 });
+          splitTextByContainer.flat().forEach(split => gsap.set(split.lines, { y: "-110%" }));
+          hamburgerIcon.classList.remove("active");
+          isMenuOpen = false;
+          isAnimating = false;
+          lenis.start();
+        }
+
+        menuOverlay.addEventListener("click", (event) => {
+          const link = event.target.closest("a[href]");
+          if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          // Dejar que el enlace y el router naveguen con normalidad.
+          if (!link.target || link.target === "_self") resetMenu();
+        }, { signal: controller.signal });
+
+        cleanupMenu = () => {
+          controller.abort();
+          resetMenu();
+          cancelAnimationFrame(rafId);
+          lenis.destroy();
+          splitTextByContainer.flat().forEach(split => split.revert());
+          cleanupMenu = () => {};
+        };
+      }
+      document.addEventListener("astro:page-load", initializeMenu);
+      document.addEventListener("astro:before-swap", () => cleanupMenu());
 }
 
