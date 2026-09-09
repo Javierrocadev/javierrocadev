@@ -80,7 +80,7 @@ export const translations = {
       "Programación, prototipado de componentes, diseño de interfaces...Todo lo relacionado con la parte visual de web es en lo que me especializo.",
     "now.btn": "Ver mi proceso",
     "process.title1": "Mi proceso creativo",
-    "process.title2": "Prototipo, Diseño, Implementación.",
+    "process.title2": "Prototipar, diseñar y crear.",
     "process.title": "Mi proceso creativo",
     "process.text":
       "Primero busco inspiración que refleje la idea que quiero transmitir. Tras hacer bocetos en papel, realizo una versión estática en Figma. La mágia del movimiento ocurre en el propio código.",
@@ -199,7 +199,7 @@ export const translations = {
       "Programming, prototyping components, interface design... Everything related to the visual part of web is what I specialize in.",
     "now.btn": "See my process",
     "process.title1": "My creative process",
-    "process.title2": "Prototype, Design, Implementation.",
+    "process.title2": "Prototype, design and build.",
     "process.title": "My creative process",
     "process.text":
       "First, I look for inspiration that reflects the idea I want to convey. After sketching on paper, I create a static version in Figma. The magic of movement happens within the code itself.",
