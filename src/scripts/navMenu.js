@@ -18,6 +18,12 @@ if (typeof document !== "undefined") {
         CustomEase.create("hop", ".87,0,.13,1");
       
         const lenis = new Lenis();
+        document.addEventListener("portfolio:back-to-top", () => {
+          lenis.scrollTo(0, {
+            duration: 0.9,
+            immediate: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+          });
+        }, { signal: controller.signal });
         function raf(time) {
           lenis.raf(time);
           rafId = requestAnimationFrame(raf);

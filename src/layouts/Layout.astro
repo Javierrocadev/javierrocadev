@@ -2,6 +2,7 @@
  import '../styles/global.css'
  import { ClientRouter } from 'astro:transitions';
  import Nav from "../components/Sections/Nav.astro";
+ import BackToTop from "../components/BackToTop.astro";
  import { getLangFromUrl } from '../i18n/utils'
  const lang = getLangFromUrl(Astro.url);
 
@@ -43,5 +44,6 @@ interface Props {
 		<div id="page-content">
 			<slot />
 		</div>
+		<BackToTop lang={lang} />
 	</body>
 </html>
