@@ -28,7 +28,7 @@ if (typeof document !== "undefined") {
         let splitTextByContainer = [];
       
         textContainers.forEach((container) => {
-          const textElements = container.querySelectorAll("a, p");
+          const textElements = container.querySelectorAll("a, p:not([data-no-split])");
           let containerSplits = [];
       
           textElements.forEach((element) => {

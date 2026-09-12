@@ -211,7 +211,19 @@ const t = useTranslations(lang);
             <!-- <p>Es, Ir, Arg </p> -->
           </div>
           <div class="menu-col">
-            <p>javierroca.dev@gmail.com</p>
+            <p data-no-split>
+              <button type="button" class="copy-email" data-copy-email="javierroca.dev@gmail.com"
+                aria-label={lang === "es" ? "Copiar correo electrónico" : "Copy email address"}
+                data-success={lang === "es" ? "Correo copiado" : "Email copied"}
+                data-error={lang === "es" ? "No se pudo copiar el correo" : "Could not copy email"}>
+                <span>javierroca.dev@gmail.com</span>
+                <span class="copy-email-icons" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="lucide lucide-copy copy-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="lucide lucide-check success-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                </span>
+              </button>
+            </p>
+            <span class="sr-only" id="email-copy-status" role="status" aria-live="polite"></span>
           </div>
         </div>
       </div>
@@ -220,6 +232,89 @@ const t = useTranslations(lang);
 </nav>
 
 <script src="../../../src/scripts/navMenu.js"></script>
+
+<style>
+  .copy-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--menu-fg-secondary);
+    cursor: pointer;
+    text-align: left;
+    padding: 12px 16px;
+    min-height: 48px;
+    width: 100%;
+    pointer-events: auto;
+  }
+  .copy-email:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 4px; }
+  .copy-email-icons { position: relative; width: 18px; height: 18px; flex-shrink: 0; }
+  .copy-email-icons svg { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 200ms ease, transform 200ms ease; }
+  .success-symbol { opacity: 0; transform: scale(0.65); }
+  .copy-email.is-copied .copy-symbol { opacity: 0; transform: scale(0.65); }
+  .copy-email.is-copied .success-symbol { opacity: 1; transform: scale(1); }
+  @media (prefers-reduced-motion: reduce) { .copy-email-icons svg { transition: none; } }
+</style>
+
+<script>
+  let cleanupCopyEmail = () => {};
+  document.addEventListener("astro:page-load", () => {
+    cleanupCopyEmail();
+    const button = document.querySelector<HTMLButtonElement>("[data-copy-email]");
+    const status = document.getElementById("email-copy-status");
+    if (!button || !status) return;
+    const controller = new AbortController();
+    let resetTimer: ReturnType<typeof setTimeout>;
+    let copying = false;
+    button.classList.remove("is-copied");
+    status.textContent = "";
+    document.addEventListener("click", async (event) => {
+      const button = (event.target as Element).closest<HTMLButtonElement>("[data-copy-email]");
+      if (!button) return;
+      if (copying) return;
+      copying = true;
+      clearTimeout(resetTimer);
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(button.dataset.copyEmail!);
+        } else {
+          // Compatibilidad con pruebas locales por HTTP desde el móvil.
+          const field = document.createElement("textarea");
+          field.value = button.dataset.copyEmail!;
+          field.style.cssText = "position:fixed;left:0;top:0;opacity:0;pointer-events:none";
+          field.readOnly = true;
+          document.body.append(field);
+          try {
+            field.select();
+            field.setSelectionRange(0, field.value.length);
+            if (!document.execCommand("copy")) throw new Error("Copy failed");
+          } finally {
+            field.remove();
+            button.focus({ preventScroll: true });
+          }
+        }
+        if (controller.signal.aborted) return;
+        button.classList.add("is-copied");
+        status.textContent = button.dataset.success!;
+        resetTimer = setTimeout(() => {
+          button.classList.remove("is-copied");
+          status.textContent = "";
+        }, 2000);
+      } catch {
+        if (controller.signal.aborted) return;
+        button.classList.remove("is-copied");
+        status.textContent = button.dataset.error!;
+      } finally {
+        copying = false;
+      }
+    }, { signal: controller.signal });
+    cleanupCopyEmail = () => {
+      controller.abort();
+      clearTimeout(resetTimer);
+    };
+  });
+  document.addEventListener("astro:before-swap", () => cleanupCopyEmail());
+</script>
 
 <script is:inline>
   function updateActiveNavigation() {
