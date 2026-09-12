@@ -46,6 +46,14 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (max-width: 1023px) {
+  /* En móvil, el menú controla la transición y sustituye el fade de Astro. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
 
 
 

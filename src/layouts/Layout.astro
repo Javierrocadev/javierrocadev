@@ -40,6 +40,8 @@ interface Props {
 	</head>
 	<body>
 		<Nav lang={lang} />
-		<slot />
+		<div id="page-content">
+			<slot />
+		</div>
 	</body>
 </html>

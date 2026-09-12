@@ -2,8 +2,12 @@ import gsap from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { SplitText } from "gsap/SplitText";
 import Lenis from "lenis";
+import { navigate } from "astro:transitions/client";
 if (typeof document !== "undefined") {
     let cleanupMenu = () => {};
+    let finishMenuNavigation = null;
+    let isMenuNavigationPending = false;
+
     function initializeMenu() {
         cleanupMenu();
         if (!document.querySelector(".menu-toggle-btn")) return;
@@ -41,7 +45,7 @@ if (typeof document !== "undefined") {
           splitTextByContainer.push(containerSplits);
         });
       
-        const container = document.querySelector(".main-container") || document.querySelector("main");
+        const container = document.getElementById("page-content");
         const menuToggleBtn = document.querySelector(".menu-toggle-btn");
         const menuOverlay = document.querySelector(".menu-overlay");
         const menuOverlayContainer = document.querySelector(".menu-overlay-content");
@@ -52,6 +56,78 @@ if (typeof document !== "undefined") {
       
         let isMenuOpen = false;
         let isAnimating = false;
+
+        function closeMenu(pageContainer = container, onComplete) {
+          isAnimating = true;
+          hamburgerIcon.classList.remove("active");
+
+          // La página de destino empieza debajo del menú y sube siguiéndolo.
+          if (pageContainer) gsap.set(pageContainer, { y: "100dvh" });
+
+          const tl = timeline = gsap.timeline();
+
+          tl.to(pageContainer, {
+            y: "0dvh",
+            duration: 1,
+            ease: "hop",
+          })
+            .to(
+              menuOverlay,
+              {
+                clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
+                duration: 1,
+                ease: "hop",
+              },
+              "<"
+            )
+            .to(
+              menuOverlayContainer,
+              {
+                yPercent: -50,
+                duration: 1,
+                ease: "hop",
+              },
+              "<"
+            )
+            .to(
+              menuToggleLabel,
+              {
+                y: "0%",
+                duration: 1,
+                ease: "hop",
+              },
+              "<"
+            )
+            .to(
+              copyContainers,
+              {
+                opacity: 0.25,
+                duration: 1,
+                ease: "hop",
+              },
+              "<"
+            );
+
+          tl.call(() => {
+            splitTextByContainer.forEach((containerSplits) => {
+              const copyLines = containerSplits.flatMap((split) => split.lines);
+              gsap.set(copyLines, { y: "-110%" });
+            });
+
+            gsap.set(copyContainers, { opacity: 1 });
+            gsap.set(menuMediaWrapper, { opacity: 0 });
+
+            isAnimating = false;
+            isMenuOpen = false;
+            lenis.start();
+            onComplete?.();
+          });
+        }
+
+        finishMenuNavigation = (onComplete) => {
+          const destinationContainer = document.getElementById("page-content");
+          closeMenu(destinationContainer, onComplete);
+        };
       
         menuToggleBtn.addEventListener("click", () => {
 
@@ -133,67 +209,7 @@ if (typeof document !== "undefined") {
       
             isMenuOpen = true;
           } else {
-            isAnimating = true;
-      
-            hamburgerIcon.classList.remove("active");
-            const tl = timeline = gsap.timeline();
-      
-            tl.to(container, {
-              y: "0svh",
-              duration: 1,
-              ease: "hop",
-            })
-              .to(
-                menuOverlay,
-                {
-                  clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)",
-                  duration: 1,
-                  ease: "hop",
-                },
-                "<"
-              )
-              .to(
-                menuOverlayContainer,
-                {
-                  yPercent: -50,
-                  duration: 1,
-                  ease: "hop",
-                },
-                "<"
-              )
-              .to(
-                menuToggleLabel,
-                {
-                  y: "0%",
-                  duration: 1,
-                  ease: "hop",
-                },
-                "<"
-              )
-              .to(
-                copyContainers,
-                {
-                  opacity: 0.25,
-                  duration: 1,
-                  ease: "hop",
-                },
-                "<"
-              );
-      
-            tl.call(() => {
-              splitTextByContainer.forEach((containerSplits) => {
-                const copyLines = containerSplits.flatMap((split) => split.lines);
-                gsap.set(copyLines, { y: "-110%" });
-              });
-      
-              gsap.set(copyContainers, { opacity: 1 });
-              gsap.set(menuMediaWrapper, { opacity: 0 });
-      
-              isAnimating = false;
-              lenis.start();
-            });
-      
-            isMenuOpen = false;
+            closeMenu();
           }
         }, { signal: controller.signal });
 
@@ -212,11 +228,33 @@ if (typeof document !== "undefined") {
           lenis.start();
         }
 
-        menuOverlay.addEventListener("click", (event) => {
+        menuOverlay.addEventListener("click", async (event) => {
           const link = event.target.closest("a[href]");
           if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-          // Dejar que el enlace y el router naveguen con normalidad.
-          if (!link.target || link.target === "_self") resetMenu();
+          if (link.target && link.target !== "_self") return;
+
+          const destination = new URL(link.href, window.location.href);
+          if (destination.origin !== window.location.origin) return;
+
+          event.preventDefault();
+
+          if (isAnimating) {
+            timeline?.progress(1);
+          }
+
+          if (destination.href === window.location.href) {
+            closeMenu();
+            return;
+          }
+
+          isMenuNavigationPending = true;
+          try {
+            await navigate(destination.href);
+          } catch (error) {
+            isMenuNavigationPending = false;
+            resetMenu();
+            throw error;
+          }
         }, { signal: controller.signal });
 
         cleanupMenu = () => {
@@ -225,9 +263,23 @@ if (typeof document !== "undefined") {
           cancelAnimationFrame(rafId);
           lenis.destroy();
           splitTextByContainer.flat().forEach(split => split.revert());
+          finishMenuNavigation = null;
           cleanupMenu = () => {};
         };
       }
-      document.addEventListener("astro:page-load", initializeMenu);
-      document.addEventListener("astro:before-swap", () => cleanupMenu());
+      document.addEventListener("astro:page-load", () => {
+        if (isMenuNavigationPending && finishMenuNavigation) {
+          finishMenuNavigation(() => {
+            isMenuNavigationPending = false;
+            cleanupMenu();
+            initializeMenu();
+          });
+          return;
+        }
+
+        initializeMenu();
+      });
+      document.addEventListener("astro:before-swap", () => {
+        if (!isMenuNavigationPending) cleanupMenu();
+      });
 }
