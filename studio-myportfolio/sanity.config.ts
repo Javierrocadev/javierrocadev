@@ -10,7 +10,21 @@ export default defineConfig({
   projectId: 'oq1tmoti',
   dataset: 'production',
 
-  plugins: [structureTool(), visionTool()],
+  plugins: [structureTool({
+    structure: (S) => S.list().title('Portfolio').items([
+      S.listItem().title('Mis proyectos').id('portfolioProjects').child(
+        S.document().schemaType('portfolioProjects').documentId('portfolioProjects').title('Mis proyectos'),
+      ),
+      ...S.documentTypeListItems().filter((item) => item.getId() !== 'portfolioProjects'),
+    ]),
+  }), visionTool()],
+
+  document: {
+    newDocumentOptions: (options) => options.filter((option) => option.templateId !== 'portfolioProjects'),
+    actions: (actions, context) => context.schemaType === 'portfolioProjects'
+      ? actions.filter((action) => action.action !== 'duplicate' && action.action !== 'delete')
+      : actions,
+  },
 
   schema: {
     types: schemaTypes,

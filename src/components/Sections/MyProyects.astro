@@ -1,5 +1,6 @@
 ---
 import LogoCard from "./LogoCard.astro";
+import { getProjects } from "../../lib/projects";
 import logoSvg from "/public/favicon.svg?raw";
 const logoPath = logoSvg.match(/\bd="([^"]+)"/)?.[1];
 interface Props {
@@ -7,62 +8,22 @@ interface Props {
 }
 
 const { lang } = Astro.props;
-import { useTranslations } from "../../i18n/utils";
-const t = useTranslations(lang);
-
-const projects = [
-  {
-    title: "OPEN SOURCE COMPONENTS",
-    image: { src: "/images/uiversevideocover.webp", alt: "Uiverse Video Cover" },
-    description: t("projects.carousel"),
-    url: "https://uiverse.io/profile/Javierrocadev",
-  },
-  {
-    title: "GRAPHIC DESIGNER PORTFOLIO",
-    image: { src: "/images/sandraguillen.webp", alt: "Private Portfolio" },
-    description: t("projects.privatePortfolio"),
-    url: "https://sandraguillen.com/",
-  },
-  {
-    title: "ONETASK",
-    image: { src: "/images/onetask.webp", alt: "OneTask" },
-    description: t("projects.helpleo"),
-  },
-  {
-    title: "MYTHINGSTODO",
-    image: { src: "/images/mttd.webp", alt: "MyThingsToDo" },
-    description: t("projects.myThingsToDo"),
-    url: "https://github.com/Javierrocadev/mythingstodo",
-  },
-  {
-    title: "LOGO",
-    description: t("projects.logo"),
-  },
-  {
-    title: "BENTO PORTFOLIO",
-    image: { src: "/images/bentoportfolio.webp", alt: "Bento Portfolio" },
-    description: t("projects.bento"),
-    url: "https://jrdevportfolio.vercel.app/",
-  },
-  {
-    title: "TAILSNIPPETS",
-    image: { src: "/images/tailsnippet.webp", alt: "TailSnippets" },
-    description: t("projects.tailSnippets"),
-    url: "https://tailsnippets.vercel.app/",
-  },
-];
+const projects = await getProjects(lang);
+const initialProject = projects[0];
 
 const projectsData = projects.map((p, i) => ({
   index: i,
   title: p.title,
-  hasComponent: p.title === "LOGO",
+  hasComponent: p.mediaType === "logo",
+  mediaType: p.mediaType,
   image: p.image || null,
+  video: p.video,
   description: p.description,
   url: p.url || null,
 }));
 ---
 
-<section id="projects" class="bg-white text-gray-900 py-20 px-6 lg:px-10">
+{initialProject && <section id="projects" class="bg-white text-gray-900 py-20 px-6 lg:px-10">
   <div class="mx-auto">
     <div
       class="flex flex-col gap-16 lg:flex-row items-start mb-10 md:mb-16 space-y-4 sm:space-y-0"
@@ -105,23 +66,33 @@ const projectsData = projects.map((p, i) => ({
             <!-- Siempre un <a> fijo; se activa/desactiva según haya URL -->
             <a
               id="project-link"
-              href={projects[0].url ?? "#"}
+              href={initialProject.url ?? "#"}
               target="_blank"
               rel="noopener noreferrer"
-              class={`contents ${!projects[0].url ? "pointer-events-none" : ""}`}
+              class={`contents ${!initialProject.url ? "pointer-events-none" : ""} ${initialProject.mediaType !== "image" ? "hidden" : ""}`}
             >
               <img
                 id="project-image"
-                src={projects[0].image?.src}
-                alt={projects[0].image?.alt}
+                src={initialProject.mediaType === "image" ? initialProject.image?.src : undefined}
+                alt={initialProject.image?.alt ?? ""}
                 class="max-h-full object-cover rounded-2xl p-0.5 shadow-[0px_2px_5px_#e1e1e1] hover:shadow-md hover:scale-95 hover:rotate-2 transition-all duration-300"
               />
             </a>
+            <video
+              id="project-video"
+              src={initialProject.mediaType === "video" ? initialProject.video ?? undefined : undefined}
+              poster={initialProject.mediaType === "video" ? initialProject.image?.src : undefined}
+              aria-label={initialProject.title}
+              controls
+              playsinline
+              preload="metadata"
+              class={`max-h-full max-w-full rounded-2xl ${initialProject.mediaType !== "video" ? "hidden" : ""}`}
+            />
 
             <!-- LogoCard: oculto por defecto -->
             <div
               id="project-logocard"
-              class="hidden flex items-center justify-center"
+              class={`${initialProject.mediaType !== "logo" ? "hidden" : ""} flex items-center justify-center`}
             >
               <LogoCard />
             </div>
@@ -130,15 +101,22 @@ const projectsData = projects.map((p, i) => ({
           <!-- Descripción con fade -->
           <p
             id="project-description"
-            class="text-lg font-light text-gray-600 line-clamp-2 text-center transition-opacity duration-300 ease-in-out"
+            class="text-lg font-light text-gray-600 whitespace-pre-line text-center transition-opacity duration-300 ease-in-out"
           >
-            {projects[0].description}
+            {initialProject.description}
           </p>
+          <a
+            id="project-details-link"
+            href={initialProject.url ?? "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={`text-primary underline ${initialProject.mediaType === "image" || !initialProject.url ? "hidden" : ""}`}
+          >{lang === "es" ? "Ver proyecto" : "View project"}</a>
         </div>
       </div>
     </div>
   </div>
-</section>
+</section>}
 
 <style>
   #project-loading {
@@ -193,7 +171,7 @@ const projectsData = projects.map((p, i) => ({
 <script
   id="projects-data"
   type="application/json"
-  set:html={JSON.stringify(projectsData)}
+  set:html={JSON.stringify(projectsData).replace(/</g, "\\u003c")}
 />
 
 <script>
@@ -201,7 +179,7 @@ const projectsData = projects.map((p, i) => ({
 
   function initializeProjects() {
     cleanupProjects();
-    if (!document.getElementById("projects-data")) return;
+    if (!document.getElementById("projects-data") || !document.getElementById("projects")) return;
     const controller = new AbortController();
     let fadeTimeout;
     let fadeFrame;
@@ -216,6 +194,8 @@ const projectsData = projects.map((p, i) => ({
   let imgEl = document.getElementById("project-image") as HTMLImageElement;
   const linkEl = document.getElementById("project-link");
   const logoEl = document.getElementById("project-logocard");
+  let videoEl = document.getElementById("project-video") as HTMLVideoElement;
+  const detailsLinkEl = document.getElementById("project-details-link") as HTMLAnchorElement;
   const descriptionEl = document.getElementById("project-description");
   const loadingEl = document.getElementById("project-loading");
 
@@ -240,7 +220,7 @@ const projectsData = projects.map((p, i) => ({
     });
   };
 
-  if (!imgEl.complete) {
+  if (projects[0]?.mediaType === "image" && !imgEl.complete) {
     const initialReady = imgEl.decode().then(() => true, () => false);
     trackLoading(initialReady, 0);
     void initialReady.then(() => {
@@ -277,9 +257,10 @@ const projectsData = projects.map((p, i) => ({
     // Si ya está seleccionado, no hacer nada
     if (el.classList.contains("font-semibold")) return;
     const version = ++selectionVersion;
+    videoEl.pause();
 
     // Cargar una imagen independiente para no conservar los píxeles anteriores.
-    const nextImage = project.hasComponent ? null : imgEl.cloneNode(false) as HTMLImageElement;
+    const nextImage = project.mediaType === "image" && project.image?.src ? imgEl.cloneNode(false) as HTMLImageElement : null;
     const imageReady = nextImage
       ? (() => {
           nextImage.src = project.image?.src ?? "";
@@ -311,11 +292,29 @@ const projectsData = projects.map((p, i) => ({
       // Ocultar todo primero
       imgEl.classList.add("hidden");
       logoEl.classList.add("hidden");
+      videoEl.classList.add("hidden");
+      videoEl.pause();
+      videoEl.removeAttribute("src");
+      videoEl.load();
+      detailsLinkEl.classList.toggle("hidden", project.mediaType === "image" || !project.url);
+      detailsLinkEl.href = project.url || "#";
 
       if (project.hasComponent) {
         // Ocultar link y mostrar LogoCard
         linkEl.classList.add("hidden");
         logoEl.classList.remove("hidden");
+      } else if (project.mediaType === "video") {
+        linkEl.classList.add("hidden");
+        const nextVideo = videoEl.cloneNode(false) as HTMLVideoElement;
+        if (project.video) {
+          nextVideo.src = project.video;
+          nextVideo.poster = project.image?.src ?? "";
+          nextVideo.setAttribute("aria-label", project.title);
+          nextVideo.classList.remove("hidden");
+        }
+        videoEl.replaceWith(nextVideo);
+        videoEl = nextVideo;
+        videoEl.load();
       } else {
         // Mostrar imagen
         linkEl.classList.remove("hidden");
@@ -352,6 +351,7 @@ const projectsData = projects.map((p, i) => ({
   };
     cleanupProjects = () => {
       controller.abort();
+      videoEl.pause();
       hideLoading();
       clearTimeout(fadeTimeout);
       cancelAnimationFrame(fadeFrame);

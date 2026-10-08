@@ -46,17 +46,6 @@ export const translations = {
     "myTecnologies.tag1": "Desarrollo Backend",
     "myTecnologies.tag2": "Maquetación y diseño",
     "myTecnologies.tag3": "Conocimientos básicos",
-    "projects.logo": "Diseño de logo de Javier Roca.",
-    "projects.tailSnippets": "Snippets de código para maquetación y diseño.",
-    "projects.bento": "Bento portfolio. Interactivo y moderno.",
-    "projects.myThingsToDo":
-      "(MVP) - MyThingsToDo. App de productividad con acompañante virtual y priorización de tareas asistida por IA (Gemini). Versión de validación previa al desarrollo de la app definitiva.",
-    "projects.helpleo":
-      "App para realizar una sola tarea al día. En desarrollo...",
-    "projects.privatePortfolio":
-      "Portfolio privado para diseñadora y artista visual.",
-    "projects.carousel":
-      "Snippets de Tailwind / CSS Open Source, listos para usar.",
     "footer.text": "Contáctame por",
     "footer.title.part1": "¿Tienes algún",
     "footer.title.highlight": "Proyecto",
@@ -167,15 +156,6 @@ export const translations = {
     "myTecnologies.tag1": "Backend Development",
     "myTecnologies.tag2": "Layout and design",
     "myTecnologies.tag3": "Basic knowledge",
-    "projects.logo": "Logo design of Javier Roca.",
-    "projects.tailSnippets": "Code snippets for layout and design.",
-    "projects.bento": "Bento portfolio. Interactive and modern.",
-    "projects.myThingsToDo":
-      "(MVP) – MyThingsToDo. A productivity app featuring a virtual assistant and AI-assisted task prioritisation (Gemini). A validation version prior to the development of the final app.",
-    "projects.helpleo": "App to perform a single task a day. In development...",
-    "projects.privatePortfolio":
-      "Private portfolio for designer and visual artist.",
-    "projects.carousel": "Tailwind / CSS Open Source snippets, ready to use.",
     "footer.text": "Contact me on",
     "footer.title.part1": "Do you have any",
     "footer.title.highlight": "Project",
