@@ -1,6 +1,13 @@
+---
+interface Props {
+  animate?: boolean;
+  compact?: boolean;
+}
 
+const {animate = true, compact = false} = Astro.props;
+---
 <div
-          class="logocontainer h-full  group relative rounded-2xl bg-[#214567] p-0.5 shadow-[0px_2px_5px_#e1e1e1] hover:shadow-md hover:scale-95 hover:rotate-2 transition-all duration-300"
+          class={`logocontainer h-full group relative rounded-2xl bg-[#214567] p-0.5 shadow-[0px_2px_5px_#e1e1e1] ${animate ? 'hover:shadow-md hover:scale-95 hover:rotate-2' : ''} transition-all duration-300`}
         >
           <div
             class="relative h-full w-full aspect-video overflow-hidden rounded-xl p-4 shadow-[0px_0px_4px_#d3d3d3]"
@@ -17,12 +24,12 @@
 
               
 
-              <div class="relative z-30 p-6 lg:44 xl:p-24 ">
+              <div class={`relative z-30 ${compact ? 'w-full p-4' : 'p-6 lg:44 xl:p-24'}`}>
                 <svg
                   width="28"
                   height="16"
                   viewBox="0 0 28 16"
-                  class="loader w-44 sm:w-64 transition-all"
+                  class={`loader ${compact ? 'w-full max-w-44 mx-auto' : 'w-44 sm:w-64'} transition-all`}
                   style="stroke-width: 0.2;"
                 >
                  

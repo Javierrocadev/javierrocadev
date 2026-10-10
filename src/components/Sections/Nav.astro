@@ -81,17 +81,17 @@ const t = useTranslations(lang);
           {t('nav.home')}
           <span class={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-primary transition-all duration-300 ${isActive('/') ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </a>
-        <a href={currentLang === 'es' ? '/aboutme' : '/en/aboutme'} data-page-path="/aboutme" class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/aboutme') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
-          {t('nav.about')}
-          <span class={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-primary transition-all duration-300 ${isActive('/aboutme') ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+        <a href={currentLang === 'es' ? '/projects' : '/en/projects'} data-page-path="/projects" class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/projects') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
+          {t('nav.projects')}
+          <span class={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-primary transition-all duration-300 ${isActive('/projects') ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </a>
         <a href={currentLang === 'es' ? '/process' : '/en/process'} data-page-path="/process" class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/process') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
           {t('nav.process')}
           <span class={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-primary transition-all duration-300 ${isActive('/process') ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </a>
-        <a href={currentLang === 'es' ? '/projects' : '/en/projects'} data-page-path="/projects" class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/projects') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
-          {t('nav.projects')}
-          <span class={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-primary transition-all duration-300 ${isActive('/projects') ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
+        <a href={currentLang === 'es' ? '/aboutme' : '/en/aboutme'} data-page-path="/aboutme" class={`group relative text-sm font-medium transition-colors duration-200 ${isActive('/aboutme') ? 'text-primary' : 'text-gray-700 hover:text-primary'}`}>
+          {t('nav.about')}
+          <span class={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-0.5 bg-primary transition-all duration-300 ${isActive('/aboutme') ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </a>
       </div>
       <div class="language-selector lg:hidden hide-on-desktop">
@@ -175,8 +175,8 @@ const t = useTranslations(lang);
               <a href={currentLang === "es" ? "/" : "/en"}>{t("nav.home")}</a>
             </div>
             <div class="menu-link">
-              <a href={currentLang === "es" ? "/aboutme" : "/en/aboutme"}
-                >{t("nav.about")}</a
+              <a href={currentLang === "es" ? "/projects" : "/en/projects"}
+                >{t("nav.projects")}</a
               >
             </div>
             <div class="menu-link">
@@ -185,8 +185,8 @@ const t = useTranslations(lang);
               >
             </div>
             <div class="menu-link">
-              <a href={currentLang === "es" ? "/projects" : "/en/projects"}
-                >{t("nav.projects")}</a
+              <a href={currentLang === "es" ? "/aboutme" : "/en/aboutme"}
+                >{t("nav.about")}</a
               >
             </div>
           </div>
