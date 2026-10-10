@@ -1,0 +1,191 @@
+---
+import {getProjects, getProjectCategories} from '../../lib/projects';
+import LogoCard from './LogoCard.astro';
+
+interface Props {
+  lang: 'es' | 'en';
+}
+
+const {lang} = Astro.props;
+const [projects, categories] = await Promise.all([
+  getProjects(lang, {featuredOnly: false}),
+  getProjectCategories(lang),
+]);
+const labels = lang === 'es' ? {
+  title: 'Proyectos',
+  intro: 'Explora mis proyectos por sus etiquetas.',
+  filter: 'Filtrar por etiquetas',
+  tags: 'Etiquetas',
+  all: 'Todos',
+  view: 'Ver proyecto',
+  unavailable: 'Sin enlace disponible',
+  empty: 'No hay proyectos con las etiquetas seleccionadas.',
+  noProjects: 'Próximamente, nuevos proyectos.',
+  singular: 'proyecto',
+  plural: 'proyectos',
+} : {
+  title: 'Projects',
+  intro: 'Explore my projects by their tags.',
+  filter: 'Filter by tags',
+  tags: 'Tags',
+  all: 'All',
+  view: 'View project',
+  unavailable: 'No link available',
+  empty: 'No projects match the selected tags.',
+  noProjects: 'New projects coming soon.',
+  singular: 'project',
+  plural: 'projects',
+};
+---
+
+<main class="bg-white text-gray-900 px-6 lg:px-10 pt-48 md:pt-[350px] pb-24" data-project-list>
+  <header class="max-w-3xl mb-12 md:mb-16">
+    <h1 class="text-h1 font-light leading-[120%] text-primary">{labels.title}</h1>
+    <p class="text-lg font-light text-gray-600 mt-6">{labels.intro}</p>
+  </header>
+
+  <div role="group" aria-label={labels.filter} class="flex flex-wrap gap-3 mb-8" data-project-filters>
+    <button type="button" class="project-filter" data-project-filter="" aria-pressed="true">{labels.all}</button>
+    {categories.map((category) => (
+      <button type="button" class="project-filter" data-project-filter={category.id} aria-pressed="false">
+        {category.title}
+      </button>
+    ))}
+  </div>
+
+  <p class="text-sm font-light text-gray-500 mb-6" role="status" aria-live="polite" aria-atomic="true"
+    data-project-count data-singular={labels.singular} data-plural={labels.plural}>
+    {projects.length} {projects.length === 1 ? labels.singular : labels.plural}
+  </p>
+
+  <div data-project-results>
+    {projects.map((project, index) => (
+      <article class="project-row grid gap-8 lg:grid-cols-12 lg:gap-16 items-center border-t border-gray-200 py-12 md:py-16"
+        data-project-row data-categories={JSON.stringify(project.categories.map((category) => category.id))}
+        aria-labelledby={`project-title-${index}`}>
+        <div class="lg:col-span-5">
+          <h2 id={`project-title-${index}`} class="text-2xl md:text-3xl font-light text-primary leading-tight">{project.title}</h2>
+          {project.categories.length > 0 && (
+            <ul class="flex flex-wrap gap-2 mt-4" aria-label={labels.tags}>
+              {project.categories.map((category) => (
+                <li class="rounded-full bg-primary/5 px-3 py-1 text-xs font-medium text-primary">{category.title}</li>
+              ))}
+            </ul>
+          )}
+          <p class="text-lg font-light text-gray-600 leading-relaxed whitespace-pre-line mt-6">{project.description}</p>
+          {project.url ? (
+            <a class="project-button mt-8" href={project.url} target="_blank" rel="noopener noreferrer">
+              {labels.view}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M7 17 17 7M7 7h10v10" />
+              </svg>
+            </a>
+          ) : (
+            <button class="project-button mt-8" type="button" disabled title={labels.unavailable}>
+              {labels.view}
+            </button>
+          )}
+        </div>
+        <div class={`lg:col-span-7 rounded-2xl overflow-hidden bg-primary/5 flex items-center justify-center ${project.mediaType !== 'logo' ? 'hover:scale-95 hover:rotate-2 transition-transform duration-300 motion-reduce:transition-none motion-reduce:hover:rotate-0 motion-reduce:hover:scale-100' : ''}`}>
+          {project.mediaType === 'logo' ? (
+            <div class="w-full"><LogoCard /></div>
+          ) : project.mediaType === 'video' && project.video ? (
+            <video class="w-full rounded-2xl aspect-video object-contain" src={project.video}
+              poster={project.image?.src} aria-label={project.title} controls playsinline preload="metadata" />
+          ) : project.image ? (
+            <img class="w-full h-auto rounded-2xl" src={project.image.src} alt={project.image.alt} loading="lazy" decoding="async" />
+          ) : null}
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <p class="text-lg font-light text-gray-600 border-t border-gray-200 py-16" data-project-empty hidden={projects.length > 0}>
+    {projects.length > 0 ? labels.empty : labels.noProjects}
+  </p>
+</main>
+
+<style>
+  .project-filter {
+    border: 1px solid var(--color-grey2);
+    border-radius: 999px;
+    padding: 0.65rem 1.25rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    color: var(--color-primary);
+    transition: background-color 200ms, border-color 200ms, color 200ms;
+  }
+  .project-filter:hover { border-color: var(--color-primary); }
+  .project-filter[aria-pressed="true"] { background: var(--color-primary); border-color: var(--color-primary); color: white; }
+  .project-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    border: 1px solid var(--color-primary);
+    border-radius: 999px;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    transition: background-color 200ms, color 200ms;
+  }
+  .project-button:hover:not(:disabled) { background: var(--color-primary); color: white; }
+  .project-button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .project-filter:focus-visible, .project-button:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; }
+  .project-row:last-child { border-bottom: 1px solid #e5e7eb; }
+  .project-row[hidden] { display: none; }
+  @media (prefers-reduced-motion: reduce) { .project-filter, .project-button { transition: none; } }
+</style>
+
+<script>
+  let cleanupProjectFilters = () => {};
+
+  function initializeProjectFilters() {
+    cleanupProjectFilters();
+    const root = document.querySelector<HTMLElement>('[data-project-list]');
+    if (!root) return;
+    const controller = new AbortController();
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-project-filter]'));
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-project-row]')).map((element) => ({
+      element,
+      categories: JSON.parse(element.dataset.categories || '[]') as string[],
+    }));
+    const count = root.querySelector<HTMLElement>('[data-project-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-project-empty]')!;
+    const selected = new Set<string>();
+
+    function updateProjects() {
+      let visibleCount = 0;
+      rows.forEach(({element, categories}) => {
+        const visible = selected.size === 0 || categories.some((category) => selected.has(category));
+        element.hidden = !visible;
+        if (visible) visibleCount++;
+        else element.querySelectorAll('video').forEach((video) => video.pause());
+      });
+      buttons.forEach((button) => {
+        const category = button.dataset.projectFilter!;
+        button.setAttribute('aria-pressed', String(category ? selected.has(category) : selected.size === 0));
+      });
+      count.textContent = `${visibleCount} ${visibleCount === 1 ? count.dataset.singular : count.dataset.plural}`;
+      empty.hidden = visibleCount > 0;
+    }
+
+    buttons.forEach((button) => button.addEventListener('click', () => {
+      const category = button.dataset.projectFilter!;
+      if (!category) selected.clear();
+      else if (selected.has(category)) selected.delete(category);
+      else selected.add(category);
+      updateProjects();
+    }, {signal: controller.signal}));
+
+    updateProjects();
+    cleanupProjectFilters = () => {
+      controller.abort();
+      root.querySelectorAll('video').forEach((video) => video.pause());
+    };
+  }
+
+  document.addEventListener('astro:page-load', initializeProjectFilters);
+  document.addEventListener('astro:before-swap', () => cleanupProjectFilters());
+</script>

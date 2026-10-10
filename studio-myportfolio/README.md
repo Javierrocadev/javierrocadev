@@ -6,7 +6,9 @@ Proyecto Sanity: `oq1tmoti`. Dataset: `production`.
 
 La sección **Mis proyectos** contiene una lista ordenable: arrastra cada proyecto para cambiar su posición en la web, incluido el logo.
 
-Solo los proyectos con **Destacado** activado aparecen en la web. Los nuevos proyectos empiezan con este campo desactivado.
+Solo los proyectos con **Destacado** activado aparecen en la portada. Los nuevos proyectos empiezan con este campo desactivado.
+
+La página **Proyectos** (`/projects` y `/en/projects`) muestra todos los proyectos en su orden de Sanity y permite filtrar por las etiquetas publicadas. Al seleccionar varias etiquetas, aparecen los proyectos que pertenecen a cualquiera de ellas. Todos utilizan el mismo diseño por ahora, incluidos los destacados.
 
 Cada proyecto tiene título y descripción en español e inglés, enlace opcional y contenido visual: imagen, vídeo MP4/WebM con portada opcional, o el componente fijo del logo. El código del logo se conserva en `src/components/Sections/LogoCard.astro`; Sanity solo elige ese componente, sin almacenar ni ejecutar código.
 
