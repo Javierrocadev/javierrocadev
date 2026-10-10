@@ -12,24 +12,28 @@ const [projects, categories] = await Promise.all([
   getProjectCategories(lang),
 ]);
 const labels = lang === 'es' ? {
-  title: 'Proyectos',
-  intro: 'Explora mis proyectos por sus etiquetas.',
-  filter: 'Filtrar por etiquetas',
+  title: 'Mis proyectos.',
+  title2: 'Diseño, código y creatividad.',
+  intro: 'Colección de algunos de mis proyectos personales y open source',
+  filter: 'Filtrar proyectos',
   tags: 'Etiquetas',
   all: 'Todos',
+  featured: 'Destacados',
   view: 'Ver proyecto',
-  empty: 'No hay proyectos con las etiquetas seleccionadas.',
+  empty: 'No hay proyectos con los filtros seleccionados.',
   noProjects: 'Próximamente, nuevos proyectos.',
   singular: 'proyecto',
   plural: 'proyectos',
 } : {
-  title: 'Projects',
-  intro: 'Explore my projects by their tags.',
-  filter: 'Filter by tags',
+  title: 'My projects.',
+  title2: 'Design, code and creativity.',
+  intro: 'A collection of some of my personal and open source projects',
+  filter: 'Filter projects',
   tags: 'Tags',
   all: 'All',
+  featured: 'Featured',
   view: 'View project',
-  empty: 'No projects match the selected tags.',
+  empty: 'No projects match the selected filters.',
   noProjects: 'New projects coming soon.',
   singular: 'project',
   plural: 'projects',
@@ -38,12 +42,15 @@ const labels = lang === 'es' ? {
 
 <main class="bg-white text-gray-900 px-6 lg:px-10 pt-48 md:pt-[350px] pb-24" data-project-list>
   <header class="max-w-3xl mb-12 md:mb-16">
-    <h1 class="text-h1 font-light leading-[120%] text-primary">{labels.title}</h1>
+    <h1 class="text-h1 font-light leading-[120%]">
+      <span class="text-primary/90">{labels.title}</span>{' '}{labels.title2}
+    </h1>
     <p class="text-lg font-light text-gray-600 mt-6">{labels.intro}</p>
   </header>
 
   <div role="group" aria-label={labels.filter} class="flex flex-wrap gap-3 mb-8" data-project-filters>
     <button type="button" class="project-filter" data-project-filter="" aria-pressed="true">{labels.all}</button>
+    <button type="button" class="project-filter" data-project-featured aria-pressed="false">{labels.featured}</button>
     {categories.map((category) => (
       <button type="button" class="project-filter" data-project-filter={category.id} aria-pressed="false">
         {category.title}
@@ -51,15 +58,15 @@ const labels = lang === 'es' ? {
     ))}
   </div>
 
-  <p class="text-sm font-light text-gray-500 mb-6" role="status" aria-live="polite" aria-atomic="true"
+  <!-- <p class="text-sm font-light text-gray-500 mb-6" role="status" aria-live="polite" aria-atomic="true"
     data-project-count data-singular={labels.singular} data-plural={labels.plural}>
     {projects.length} {projects.length === 1 ? labels.singular : labels.plural}
-  </p>
+  </p> -->
 
   <div data-project-results>
     {projects.map((project, index) => (
       <article class="project-row border-t border-gray-200"
-        data-project-row data-categories={JSON.stringify(project.categories.map((category) => category.id))}
+        data-project-row data-featured={String(project.featured)} data-categories={JSON.stringify(project.categories.map((category) => category.id))}
         aria-labelledby={`project-title-${index}`}>
         <div class="project-content min-w-0">
           <h2 id={`project-title-${index}`} class="text-2xl font-light text-primary leading-tight break-words">{project.title}</h2>
@@ -85,7 +92,7 @@ const labels = lang === 'es' ? {
             <div class="project-media project-logo"><LogoCard animate={false} compact /></div>
           ) : project.mediaType === 'video' && project.video ? (
             <video class="project-media rounded-2xl" src={project.video}
-              poster={project.image?.src} aria-label={project.title} controls playsinline preload="metadata" />
+              poster={project.image?.src} aria-label={project.title} autoplay muted loop playsinline preload="metadata" />
           ) : project.image ? (
             <img class="project-media rounded-2xl" src={project.image.src} alt={project.image.alt} loading="lazy" decoding="async" />
           ) : null}
@@ -182,37 +189,65 @@ const labels = lang === 'es' ? {
     if (!root) return;
     const controller = new AbortController();
     const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-project-filter]'));
+    const featuredButton = root.querySelector<HTMLButtonElement>('[data-project-featured]')!;
     const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-project-row]')).map((element) => ({
       element,
+      featured: element.dataset.featured === 'true',
       categories: JSON.parse(element.dataset.categories || '[]') as string[],
     }));
-    const count = root.querySelector<HTMLElement>('[data-project-count]')!;
+    const count = root.querySelector<HTMLElement>('[data-project-count]');
     const empty = root.querySelector<HTMLElement>('[data-project-empty]')!;
     const selected = new Set<string>();
+    let featuredOnly = false;
+
+    function playVideo(video: HTMLVideoElement) {
+      if (controller.signal.aborted || video.closest<HTMLElement>('[data-project-row]')?.hidden) return;
+      video.muted = true;
+      void video.play().catch(() => {});
+    }
+
+    root.querySelectorAll('video').forEach((video) => {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.addEventListener('canplay', () => playVideo(video), {signal: controller.signal});
+      // Reiniciar la carga tras insertar el vídeo mediante ClientRouter.
+      video.load();
+    });
 
     function updateProjects() {
       let visibleCount = 0;
-      rows.forEach(({element, categories}) => {
-        const visible = selected.size === 0 || categories.some((category) => selected.has(category));
+      rows.forEach(({element, featured, categories}) => {
+        const visible = (!featuredOnly || featured) && (selected.size === 0 || categories.some((category) => selected.has(category)));
         element.hidden = !visible;
         if (visible) visibleCount++;
-        else element.querySelectorAll('video').forEach((video) => video.pause());
+        element.querySelectorAll('video').forEach((video) => {
+          if (visible) playVideo(video);
+          else video.pause();
+        });
       });
       buttons.forEach((button) => {
         const category = button.dataset.projectFilter!;
-        button.setAttribute('aria-pressed', String(category ? selected.has(category) : selected.size === 0));
+        button.setAttribute('aria-pressed', String(category ? selected.has(category) : selected.size === 0 && !featuredOnly));
       });
-      count.textContent = `${visibleCount} ${visibleCount === 1 ? count.dataset.singular : count.dataset.plural}`;
+      featuredButton.setAttribute('aria-pressed', String(featuredOnly));
+      if (count) count.textContent = `${visibleCount} ${visibleCount === 1 ? count.dataset.singular : count.dataset.plural}`;
       empty.hidden = visibleCount > 0;
     }
 
     buttons.forEach((button) => button.addEventListener('click', () => {
       const category = button.dataset.projectFilter!;
-      if (!category) selected.clear();
+      if (!category) {
+        selected.clear();
+        featuredOnly = false;
+      }
       else if (selected.has(category)) selected.delete(category);
       else selected.add(category);
       updateProjects();
     }, {signal: controller.signal}));
+    featuredButton.addEventListener('click', () => {
+      featuredOnly = !featuredOnly;
+      updateProjects();
+    }, {signal: controller.signal});
 
     updateProjects();
     cleanupProjectFilters = () => {

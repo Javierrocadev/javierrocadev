@@ -46,7 +46,7 @@ export default defineType({
           }),
           defineField({
             name: 'video', title: 'Vídeo', type: 'file', options: {accept: 'video/mp4,video/webm'},
-            description: 'MP4 o WebM. Se muestra con controles de reproducción.',
+            description: 'MP4 o WebM. Se reproduce automáticamente en bucle, sin sonido ni controles.',
             hidden: ({parent}) => parent?.mediaType !== 'video',
             validation: (Rule) => Rule.custom((value, context) => (context.parent as {mediaType?: string})?.mediaType === 'video' && !value?.asset ? 'Añade un vídeo.' : true),
           }),

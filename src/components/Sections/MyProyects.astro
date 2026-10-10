@@ -92,7 +92,9 @@ const projectsData = projects.map((p, i) => ({
               src={initialProject.mediaType === "video" ? initialProject.video ?? undefined : undefined}
               poster={initialProject.mediaType === "video" ? initialProject.image?.src : undefined}
               aria-label={initialProject.title}
-              controls
+              autoplay
+              muted
+              loop
               playsinline
               preload="metadata"
               class={`max-h-full max-w-full rounded-2xl ${initialProject.mediaType !== "video" ? "hidden" : ""}`}
@@ -315,6 +317,7 @@ const projectsData = projects.map((p, i) => ({
       } else if (project.mediaType === "video") {
         linkEl.classList.add("hidden");
         const nextVideo = videoEl.cloneNode(false) as HTMLVideoElement;
+        nextVideo.muted = true;
         if (project.video) {
           nextVideo.src = project.video;
           nextVideo.poster = project.image?.src ?? "";
@@ -324,6 +327,7 @@ const projectsData = projects.map((p, i) => ({
         videoEl.replaceWith(nextVideo);
         videoEl = nextVideo;
         videoEl.load();
+        if (project.video) void videoEl.play().catch(() => {});
       } else {
         // Mostrar imagen
         linkEl.classList.remove("hidden");

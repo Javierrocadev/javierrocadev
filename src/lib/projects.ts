@@ -9,6 +9,7 @@ export interface ProjectCategory {
 export interface Project {
   title: string
   description: string
+  featured: boolean
   mediaType: 'image' | 'video' | 'logo'
   image: {src: string; alt: string} | null
   video: string | null
@@ -19,6 +20,7 @@ export interface Project {
 interface StoredProject {
   title?: TranslatedText
   description?: TranslatedText
+  featured?: boolean
   mediaType: Project['mediaType']
   image?: {url?: string; alt?: TranslatedText}
   video?: string
@@ -31,7 +33,7 @@ const translate = (text: TranslatedText | undefined, lang: 'es' | 'en') => text?
 export async function getProjects(lang: 'es' | 'en', {featuredOnly = true} = {}): Promise<Project[]> {
   const items = await sanityClient.withConfig({useCdn: false}).fetch<StoredProject[] | null>(`
     *[_type == "portfolioProjects" && _id == "portfolioProjects"][0].projects[!$featuredOnly || featured == true]{
-      title, description, mediaType, url,
+      title, description, featured, mediaType, url,
       image{"url": asset->url, alt},
       "video": video.asset->url,
       categories[]->{_id, title}
@@ -40,6 +42,7 @@ export async function getProjects(lang: 'es' | 'en', {featuredOnly = true} = {})
   return (items || []).map((item) => ({
     title: translate(item.title, lang),
     description: translate(item.description, lang),
+    featured: item.featured === true,
     mediaType: item.mediaType,
     image: item.image?.url ? {src: item.image.url, alt: translate(item.image.alt, lang) || translate(item.title, lang)} : null,
     video: item.video || null,
