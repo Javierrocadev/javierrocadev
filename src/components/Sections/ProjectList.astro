@@ -155,7 +155,7 @@ const labels = lang === 'es' ? {
     max-width: 100%;
     max-height: none;
     object-fit: contain;
-    transition: transform 350ms ease;
+    transition: transform 350ms ease, border-radius 350ms ease;
   }
   .project-logo { aspect-ratio: 16 / 9; }
   @media (min-width: 768px) {
@@ -165,13 +165,18 @@ const labels = lang === 'es' ? {
     .project-logo { height: 100%; }
     .project-row:focus-within { padding-block: 2rem; }
     .project-row:focus-within .project-media-space { height: 16rem; }
+    .project-row:focus-within img.project-media,
+    .project-row:focus-within video.project-media { border-radius: 0; }
   }
   @media (min-width: 768px) and (hover: hover) and (pointer: fine) {
     .project-row:hover { padding-block: 2rem; }
     .project-row:hover .project-media-space { height: 16rem; }
-    .project-row:hover .project-media {
+    .project-row:hover img.project-media,
+    .project-row:hover .project-logo {
       transform: rotate(2deg);
     }
+    .project-row:hover img.project-media,
+    .project-row:hover video.project-media { border-radius: 0; }
   }
   .project-row[hidden] { display: none; }
   @media (prefers-reduced-motion: reduce) {
