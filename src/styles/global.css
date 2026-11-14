@@ -388,3 +388,132 @@ nav {
         stroke-dashoffset: 5;
       }
     }
+
+@property --project-cta-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: true;
+}
+
+@layer components {
+  .project-media-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: rgba(21, 45, 67, 0);
+    text-decoration: none;
+    transition: background-color 250ms ease, border-radius 350ms ease;
+  }
+
+  .project-media-overlay--rounded {
+    border-radius: 1rem;
+  }
+
+  .project-media-overlay:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 4px;
+  }
+
+  .project-media-cta {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    white-space: nowrap;
+    border-radius: 999px;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-primary);
+    background-color: rgba(255, 255, 255, 0.9);
+    opacity: 0;
+    scale: 0.96;
+    pointer-events: none;
+    transition:
+      opacity 180ms ease,
+      scale 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .project-media-cta::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    --project-cta-angle: 0deg;
+    background: conic-gradient(
+      from 0deg,
+      var(--color-primary) 0deg var(--project-cta-angle),
+      transparent var(--project-cta-angle) 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    transition: --project-cta-angle 180ms ease 0ms;
+  }
+
+  .project-media-cta svg {
+    flex-shrink: 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .project-media-overlay:hover,
+    .project-media-overlay:focus-visible {
+      background: rgba(21, 45, 67, 0.08);
+    }
+
+    .project-media-overlay:hover .project-media-cta {
+      will-change: transform;
+    }
+
+    .project-media-overlay:hover .project-media-cta,
+    .project-media-overlay:focus-visible .project-media-cta {
+      opacity: 1;
+      scale: 1;
+      transition:
+        opacity 200ms ease,
+        scale 260ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .project-media-overlay:hover .project-media-cta::before,
+    .project-media-overlay:focus-visible .project-media-cta::before {
+      --project-cta-angle: 360deg;
+      transition: --project-cta-angle 1100ms cubic-bezier(0.4, 0, 0.2, 1) 80ms;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-media-overlay,
+    .project-media-cta,
+    .project-media-cta::before {
+      transition: none;
+    }
+
+    .project-media-overlay:focus-visible .project-media-cta,
+    .project-media-overlay:hover .project-media-cta {
+      opacity: 1;
+      scale: 1;
+      transform: none;
+    }
+
+    .project-media-overlay:focus-visible .project-media-cta::before,
+    .project-media-overlay:hover .project-media-cta::before {
+      --project-cta-angle: 360deg;
+    }
+
+    .project-media-overlay--video {
+      bottom: 2.75rem;
+    }
+  }
+}

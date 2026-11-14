@@ -23,6 +23,7 @@ const projectsData = projects.map((p, i) => ({
   description: p.description,
   url: p.url || null,
 }));
+const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
 ---
 
 {initialProject && <section id="projects" class="bg-white text-gray-900 py-20 px-6 lg:px-10">
@@ -72,43 +73,55 @@ const projectsData = projects.map((p, i) => ({
           <!-- Wrapper que controla el fade de imagen/logo -->
           <div
             id="project-visual"
-            class="max-h-[70%] w-full flex items-center justify-center transition-opacity duration-300 ease-in-out"
+            class="max-h-[70%] w-full min-h-0 flex items-center justify-center transition-opacity duration-300 ease-in-out"
           >
-            <!-- Siempre un <a> fijo; se activa/desactiva según haya URL -->
-            <a
-              id="project-link"
-              href={initialProject.url ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              class={`contents ${!initialProject.url ? "pointer-events-none" : ""} ${initialProject.mediaType !== "image" ? "hidden" : ""}`}
+            <div
+              id="project-media-stage"
+              class="relative inline-flex flex-col items-center justify-center max-h-full max-w-full min-h-0"
             >
               <img
                 id="project-image"
                 src={initialProject.mediaType === "image" ? initialProject.image?.src : undefined}
                 alt={initialProject.image?.alt ?? ""}
-                class="max-h-full object-cover rounded-2xl p-0.5 shadow-[0px_2px_5px_#e1e1e1] hover:shadow-md hover:scale-95 hover:rotate-2 transition-all duration-300"
+                class={`min-h-0 max-h-full w-auto max-w-full object-contain rounded-2xl p-0.5 shadow-[0px_2px_5px_#e1e1e1] ${initialProject.mediaType !== "image" ? "hidden" : ""}`}
               />
-            </a>
-            <video
-              id="project-video"
-              data-src={initialProject.mediaType === "video" ? initialProject.video ?? undefined : undefined}
-              poster={initialProject.mediaType === "video" ? getVideoPoster(initialProject.image?.src) : undefined}
-              aria-label={initialProject.title}
-              muted
-              loop
-              playsinline
-              preload="none"
-              width="1280"
-              height="720"
-              class={`aspect-video w-full h-auto max-h-full max-w-full object-contain bg-primary/10 rounded-2xl ${initialProject.mediaType !== "video" ? "hidden" : ""}`}
-            />
+              <video
+                id="project-video"
+                data-src={initialProject.mediaType === "video" ? initialProject.video ?? undefined : undefined}
+                poster={initialProject.mediaType === "video" ? getVideoPoster(initialProject.image?.src) : undefined}
+                aria-label={initialProject.title}
+                muted
+                loop
+                playsinline
+                preload="none"
+                width="1280"
+                height="720"
+                class={`min-h-0 aspect-video w-auto h-auto max-h-full max-w-full object-contain bg-primary/10 rounded-2xl ${initialProject.mediaType !== "video" ? "hidden" : ""}`}
+              />
 
-            <!-- LogoCard: oculto por defecto -->
-            <div
-              id="project-logocard"
-              class={`${initialProject.mediaType !== "logo" ? "hidden" : ""} flex items-center justify-center`}
-            >
-              <LogoCard />
+              <!-- LogoCard: oculto por defecto -->
+              <div
+                id="project-logocard"
+                class={`${initialProject.mediaType !== "logo" ? "hidden" : ""} flex items-center justify-center`}
+              >
+                <LogoCard />
+              </div>
+
+              <a
+                id="project-media-overlay"
+                href={initialProject.url ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={initialProject.url ? `${viewProjectLabel}: ${initialProject.title}` : undefined}
+                class={`project-media-overlay project-media-overlay--rounded ${initialProject.mediaType === "video" ? "project-media-overlay--video" : ""} ${!initialProject.url || (initialProject.mediaType === "image" && !initialProject.image?.src) ? "hidden" : ""}`}
+              >
+                <span class="project-media-cta" aria-hidden="true">
+                  <span>{viewProjectLabel}</span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M7 17 17 7M7 7h10v10" />
+                  </svg>
+                </span>
+              </a>
             </div>
           </div>
 
@@ -124,8 +137,8 @@ const projectsData = projects.map((p, i) => ({
             href={initialProject.url ?? "#"}
             target="_blank"
             rel="noopener noreferrer"
-            class={`text-primary underline ${initialProject.mediaType === "image" || !initialProject.url ? "hidden" : ""}`}
-          >{lang === "es" ? "Ver proyecto" : "View project"}</a>
+            class={`text-primary underline ${!initialProject.url ? "hidden" : initialProject.mediaType !== "logo" ? "[@media(hover:hover)_and_(pointer:fine)]:hidden" : ""}`}
+          >{viewProjectLabel}</a>
         </div>
       </div>
     </div>
@@ -133,6 +146,15 @@ const projectsData = projects.map((p, i) => ({
 </section>}
 
 <style>
+  #project-media-overlay {
+    top: var(--overlay-top, 0px);
+    left: var(--overlay-left, 0px);
+    width: var(--overlay-width, 100%);
+    height: var(--overlay-height, 100%);
+    right: auto;
+    bottom: auto;
+  }
+
   #project-loading {
     position: absolute;
     inset: 0;
@@ -176,6 +198,9 @@ const projectsData = projects.map((p, i) => ({
 
 
   @media (prefers-reduced-motion: reduce) {
+    #project-media-overlay.project-media-overlay--video {
+      height: max(0px, calc(var(--overlay-height, 100%) - 2.75rem));
+    }
     #project-loading { transition: none; }
     #project-loading path { animation: none; }
     #project-visual, #project-description { transition: none; }
@@ -190,6 +215,7 @@ const projectsData = projects.map((p, i) => ({
 
 <script>
   import { createProjectVideos } from "../../scripts/project-videos";
+  import { createProjectMediaFollow } from "../../scripts/project-media-follow";
   let cleanupProjects = () => {};
 
   function initializeProjects() {
@@ -206,15 +232,59 @@ const projectsData = projects.map((p, i) => ({
   );
 
   const visualEl = document.getElementById("project-visual");
+  const stageEl = document.getElementById("project-media-stage");
   let imgEl = document.getElementById("project-image") as HTMLImageElement;
-  const linkEl = document.getElementById("project-link");
+  const mediaOverlayEl = document.getElementById("project-media-overlay") as HTMLAnchorElement;
   const logoEl = document.getElementById("project-logocard");
   let videoEl = document.getElementById("project-video") as HTMLVideoElement;
   const videos = createProjectVideos();
   videos.observe(videoEl);
+  const mediaFollow = createProjectMediaFollow({ root: visualEl });
   const detailsLinkEl = document.getElementById("project-details-link") as HTMLAnchorElement;
+  const viewProjectText = detailsLinkEl.textContent?.trim() || "Ver proyecto";
   const descriptionEl = document.getElementById("project-description");
   const loadingEl = document.getElementById("project-loading");
+
+  const syncOverlayBounds = () => {
+    if (!stageEl || !mediaOverlayEl) return;
+    const activeMedia =
+      !imgEl.classList.contains("hidden")
+        ? imgEl
+        : !videoEl.classList.contains("hidden")
+          ? videoEl
+          : !logoEl.classList.contains("hidden")
+            ? logoEl
+            : null;
+    if (!activeMedia || mediaOverlayEl.classList.contains("hidden")) {
+      mediaOverlayEl.style.removeProperty("--overlay-left");
+      mediaOverlayEl.style.removeProperty("--overlay-top");
+      mediaOverlayEl.style.removeProperty("--overlay-width");
+      mediaOverlayEl.style.removeProperty("--overlay-height");
+      return;
+    }
+    const stageRect = stageEl.getBoundingClientRect();
+    const mediaRect = activeMedia.getBoundingClientRect();
+    if (mediaRect.width <= 0 || mediaRect.height <= 0) return;
+    mediaOverlayEl.style.setProperty("--overlay-left", `${(mediaRect.left - stageRect.left).toFixed(2)}px`);
+    mediaOverlayEl.style.setProperty("--overlay-top", `${(mediaRect.top - stageRect.top).toFixed(2)}px`);
+    mediaOverlayEl.style.setProperty("--overlay-width", `${mediaRect.width.toFixed(2)}px`);
+    mediaOverlayEl.style.setProperty("--overlay-height", `${mediaRect.height.toFixed(2)}px`);
+  };
+
+  const bindVideoRatio = (target: HTMLVideoElement) => {
+    target.addEventListener("loadedmetadata", () => {
+      if (target.videoWidth > 0 && target.videoHeight > 0) {
+        target.style.aspectRatio = `${target.videoWidth} / ${target.videoHeight}`;
+      }
+    }, { signal: controller.signal });
+  };
+  bindVideoRatio(videoEl);
+
+  const overlayResizeObserver = new ResizeObserver(syncOverlayBounds);
+  [visualEl, stageEl, imgEl, videoEl, logoEl].forEach((el) => {
+    if (el) overlayResizeObserver.observe(el);
+  });
+  syncOverlayBounds();
 
   const hideLoading = () => {
     clearTimeout(loadingTimeout);
@@ -241,7 +311,10 @@ const projectsData = projects.map((p, i) => ({
     const initialReady = imgEl.decode().then(() => true, () => false);
     trackLoading(initialReady, 0);
     void initialReady.then(() => {
-      if (!controller.signal.aborted && selectionVersion === 0) hideLoading();
+      if (!controller.signal.aborted && selectionVersion === 0) {
+        hideLoading();
+        syncOverlayBounds();
+      }
     });
   }
 
@@ -264,7 +337,10 @@ const projectsData = projects.map((p, i) => ({
   updateUnderlineWidths();
   window.addEventListener("resize", updateUnderlineWidths, { signal: controller.signal });
   document.fonts.ready.then(() => {
-    if (!controller.signal.aborted) updateUnderlineWidths();
+    if (!controller.signal.aborted) {
+      updateUnderlineWidths();
+      syncOverlayBounds();
+    }
   });
 
   window.selectProject = function (el) {
@@ -315,16 +391,15 @@ const projectsData = projects.map((p, i) => ({
       delete videoEl.dataset.src;
       videoEl.preload = "none";
       videoEl.load();
-      detailsLinkEl.classList.toggle("hidden", project.mediaType === "image" || !project.url);
-      detailsLinkEl.href = project.url || "#";
+
+      let hasVisibleMedia = false;
 
       if (project.hasComponent) {
-        // Ocultar link y mostrar LogoCard
-        linkEl.classList.add("hidden");
         logoEl.classList.remove("hidden");
+        hasVisibleMedia = true;
       } else if (project.mediaType === "video") {
-        linkEl.classList.add("hidden");
         const nextVideo = videoEl.cloneNode(false) as HTMLVideoElement;
+        nextVideo.style.removeProperty("aspect-ratio");
         nextVideo.muted = true;
         if (project.video) {
           nextVideo.dataset.src = project.video;
@@ -332,31 +407,40 @@ const projectsData = projects.map((p, i) => ({
           else nextVideo.removeAttribute("poster");
           nextVideo.setAttribute("aria-label", project.title);
           nextVideo.classList.remove("hidden");
+          hasVisibleMedia = true;
         }
+        overlayResizeObserver.unobserve(videoEl);
         videoEl.replaceWith(nextVideo);
         videoEl = nextVideo;
+        bindVideoRatio(videoEl);
+        overlayResizeObserver.observe(videoEl);
         videos.observe(videoEl);
-      } else {
-        // Mostrar imagen
-        linkEl.classList.remove("hidden");
-        if (loaded && nextImage) {
-          nextImage.classList.remove("hidden");
-          imgEl.replaceWith(nextImage);
-          imgEl = nextImage;
-        } else {
-          // No mostrar la imagen anterior si la nueva no se puede cargar.
-          linkEl.classList.add("hidden");
-        }
-
-        // Activar o desactivar el enlace según haya URL
-        if (project.url) {
-          linkEl.href = project.url;
-          linkEl.classList.remove("pointer-events-none");
-        } else {
-          linkEl.href = "#";
-          linkEl.classList.add("pointer-events-none");
-        }
+      } else if (loaded && nextImage) {
+        nextImage.classList.remove("hidden");
+        overlayResizeObserver.unobserve(imgEl);
+        imgEl.replaceWith(nextImage);
+        imgEl = nextImage;
+        overlayResizeObserver.observe(imgEl);
+        hasVisibleMedia = true;
       }
+
+      if (project.url && hasVisibleMedia) {
+        mediaOverlayEl.href = project.url;
+        mediaOverlayEl.setAttribute("aria-label", `${viewProjectText}: ${project.title}`);
+        mediaOverlayEl.classList.toggle("project-media-overlay--video", project.mediaType === "video");
+        mediaOverlayEl.classList.remove("hidden");
+      } else {
+        mediaOverlayEl.href = "#";
+        mediaOverlayEl.removeAttribute("aria-label");
+        mediaOverlayEl.classList.remove("project-media-overlay--video");
+        mediaOverlayEl.classList.add("hidden");
+      }
+      mediaFollow.reset();
+      syncOverlayBounds();
+
+      detailsLinkEl.classList.toggle("hidden", !project.url);
+      detailsLinkEl.classList.toggle("[@media(hover:hover)_and_(pointer:fine)]:hidden", Boolean(project.url) && !project.hasComponent);
+      detailsLinkEl.href = project.url || "#";
 
       // Swap descripción
       descriptionEl.textContent = project.description;
@@ -364,6 +448,7 @@ const projectsData = projects.map((p, i) => ({
       // Fade in (se necesita un frame para que el navegador registre el cambio)
       fadeFrame = requestAnimationFrame(() => {
         if (controller.signal.aborted || version !== selectionVersion) return;
+        syncOverlayBounds();
         hideLoading();
         visualEl.classList.remove("opacity-0");
         descriptionEl.classList.remove("opacity-0");
@@ -372,6 +457,8 @@ const projectsData = projects.map((p, i) => ({
   };
     cleanupProjects = () => {
       controller.abort();
+      overlayResizeObserver.disconnect();
+      mediaFollow.disconnect();
       videos.disconnect();
       hideLoading();
       clearTimeout(fadeTimeout);
