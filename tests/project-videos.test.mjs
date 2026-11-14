@@ -228,6 +228,62 @@ test('maxConcurrent caps simultaneously playing videos and prioritize promotes h
   assert.equal(v2.pauses, 1);
 });
 
+test('project list allows three visible videos and keeps a fourth paused', (t) => {
+  const match = components[1].match(/maxConcurrent: mobileViewport\.matches \? 1 : (\d+)/);
+  assert.ok(match, 'Project list must declare its playback limit');
+  assert.equal(Number(match[1]), 3);
+  const {controller, playback} = setup(t, {maxConcurrent: Number(match[1])});
+  const videos = Array.from({length: 4}, () => new Video());
+  videos.forEach(video => controller.observe(video));
+  playback.callback(videos.map((target, index) => ({
+    target, isIntersecting: true, intersectionRatio: 1 - index / 10,
+  })));
+  assert.deepEqual(videos.map(video => video.plays), [1, 1, 1, 0]);
+  assert.equal(videos[3].pauses, 1);
+  playback.emit(videos[0], false);
+  assert.equal(videos[0].pauses, 1);
+  assert.equal(videos[3].plays, 1);
+});
+
+test('project list switches between one mobile video and three desktop videos without leaking listeners', () => {
+  const block = components[1].match(/const mobileViewport = [\s\S]*?(?=    const frameBindings)/)?.[0];
+  assert.ok(block, 'Responsive playback configuration must be present');
+  for (const initiallyMobile of [true, false]) {
+    const viewport = new EventTarget();
+    viewport.matches = initiallyMobile;
+    const page = new AbortController();
+    const created = [];
+    const media = [{id: 'first'}, {id: 'second'}];
+    const getCurrent = new Function('window', 'createProjectVideos', 'root', 'controller', `${block}; return () => videos;`)(
+      {matchMedia(query) { assert.equal(query, '(max-width: 767px)'); return viewport; }},
+      options => {
+        const instance = {limit: options.maxConcurrent, disconnected: false, observed: [],
+          disconnect() { this.disconnected = true; },
+          observe(video) { this.observed.push(video); },
+        };
+        created.push(instance);
+        return instance;
+      },
+      {querySelectorAll(selector) { assert.equal(selector, 'video'); return media; }},
+      page,
+    );
+    assert.equal(getCurrent().limit, initiallyMobile ? 1 : 3);
+    viewport.matches = !initiallyMobile;
+    viewport.dispatchEvent(new Event('change'));
+    assert.equal(created[0].disconnected, true);
+    assert.equal(getCurrent().limit, initiallyMobile ? 3 : 1);
+    assert.deepEqual(getCurrent().observed, media);
+    viewport.matches = initiallyMobile;
+    viewport.dispatchEvent(new Event('change'));
+    assert.equal(created[1].disconnected, true);
+    assert.equal(getCurrent().limit, initiallyMobile ? 1 : 3);
+    page.abort();
+    viewport.dispatchEvent(new Event('change'));
+    assert.equal(created.length, 3);
+    getCurrent().disconnect();
+  }
+});
+
 test('evicts far-offscreen videos to release decoder memory and rehydrates on return', (t) => {
   const {controller, load, playback, evict} = setup(t, {maxConcurrent: 1});
   const v = new Video();
