@@ -176,25 +176,26 @@ const labels = lang === 'es' ? {
     .project-row:focus-within video.project-media { border-radius: 0; }
   }
   @media (min-width: 768px) and (hover: hover) and (pointer: fine) {
-    .project-row:hover { padding-block: 2rem; }
-    .project-row:hover .project-media-space { height: 16rem; }
-    .project-row:hover img.project-media,
-    .project-row:hover .project-logo {
+    .project-row.is-hovered { padding-block: 2rem; }
+    .project-row.is-hovered .project-media-space { height: 16rem; }
+    .project-row.is-hovered img.project-media,
+    .project-row.is-hovered .project-logo {
       transform: rotate(2deg);
     }
-    .project-row:hover img.project-media,
-    .project-row:hover video.project-media { border-radius: 0; }
+    .project-row.is-hovered img.project-media,
+    .project-row.is-hovered video.project-media { border-radius: 0; }
   }
   .project-row[hidden] { display: none; }
   @media (prefers-reduced-motion: reduce) {
     .project-filter, .project-button, .project-row, .project-media-space, .project-media { transition: none; }
-    .project-row:hover .project-media { transform: none; }
+    .project-row.is-hovered .project-media { transform: none; }
   }
 </style>
 
 <script>
   import {createProjectVideos} from '../../scripts/project-videos';
   import {createProjectRowAnimator} from '../../scripts/project-filter-animation';
+  import {createProjectHoverTracker} from '../../scripts/project-hover';
   let cleanupProjectFilters = () => {};
 
   function initializeProjectFilters() {
@@ -219,9 +220,15 @@ const labels = lang === 'es' ? {
       const video = element.querySelector<HTMLVideoElement>('video');
       if (!video) return;
       videos.observe(video);
-      const activate = () => videos.prioritize(video);
-      element.addEventListener('pointerenter', activate, {signal: controller.signal});
-      element.addEventListener('focusin', activate, {signal: controller.signal});
+      element.addEventListener('focusin', () => videos.prioritize(video), {signal: controller.signal});
+    });
+
+    const hoverTracker = createProjectHoverTracker({
+      root,
+      onHoverChange(row) {
+        const video = row?.querySelector<HTMLVideoElement>('video');
+        if (video) videos.prioritize(video);
+      },
     });
 
     const animator = createProjectRowAnimator({
@@ -235,6 +242,7 @@ const labels = lang === 'es' ? {
       },
       onComplete() {
         videos.refresh();
+        hoverTracker.sync();
       },
     });
 
@@ -277,6 +285,7 @@ const labels = lang === 'es' ? {
     updateProjects(false);
     cleanupProjectFilters = () => {
       controller.abort();
+      hoverTracker.disconnect();
       animator.disconnect();
       videos.disconnect();
     };
