@@ -73,6 +73,7 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
           <!-- Wrapper que controla el fade de imagen/logo -->
           <div
             id="project-visual"
+            data-media-entry="pending"
             class="max-h-[70%] w-full min-h-0 flex items-center justify-center transition-opacity duration-300 ease-in-out"
           >
             <div
@@ -96,7 +97,7 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
                 preload="none"
                 width="1280"
                 height="720"
-                class={`min-h-0 aspect-video w-auto h-auto max-h-full max-w-full object-contain bg-primary/10 rounded-2xl ${initialProject.mediaType !== "video" ? "hidden" : ""}`}
+                class={`min-h-0 aspect-video w-auto h-auto max-h-full max-w-full object-contain rounded-2xl ${initialProject.mediaType !== "video" ? "hidden" : ""}`}
               />
 
               <!-- LogoCard: oculto por defecto -->
@@ -145,7 +146,20 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
   </div>
 </section>}
 
+<noscript><style is:inline>
+  #project-visual[data-media-entry] { opacity: 1; transform: none; pointer-events: auto; }
+</style></noscript>
+
 <style>
+  #project-visual[data-media-entry] {
+    transition: opacity 240ms cubic-bezier(0.23, 1, 0.32, 1), transform 240ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  #project-visual[data-media-entry="pending"] {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+  }
+  #project-visual[data-media-entry="ready"] { opacity: 1; transform: translateY(0); }
   #project-media-overlay {
     top: var(--overlay-top, 0px);
     left: var(--overlay-left, 0px);
@@ -203,7 +217,7 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
     }
     #project-loading { transition: none; }
     #project-loading path { animation: none; }
-    #project-visual, #project-description { transition: none; }
+    #project-visual, #project-description, #project-visual[data-media-entry] { transition: none; transform: none; }
   }
 </style>
 
@@ -214,6 +228,7 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
 />
 
 <script>
+  import {waitForProjectMedia, createProjectMediaEntrance} from "../../scripts/project-media-entry";
   import { createProjectVideos } from "../../scripts/project-videos";
   import { createProjectMediaFollow } from "../../scripts/project-media-follow";
   let cleanupProjects = () => {};
@@ -226,6 +241,8 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
     let fadeFrame;
     let selectionVersion = 0;
     let loadingTimeout;
+    let selectionController = new AbortController();
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   const projects = JSON.parse(
     document.getElementById("projects-data").textContent,
@@ -271,15 +288,6 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
     mediaOverlayEl.style.setProperty("--overlay-height", `${mediaRect.height.toFixed(2)}px`);
   };
 
-  const bindVideoRatio = (target: HTMLVideoElement) => {
-    target.addEventListener("loadedmetadata", () => {
-      if (target.videoWidth > 0 && target.videoHeight > 0) {
-        target.style.aspectRatio = `${target.videoWidth} / ${target.videoHeight}`;
-      }
-    }, { signal: controller.signal });
-  };
-  bindVideoRatio(videoEl);
-
   const overlayResizeObserver = new ResizeObserver(syncOverlayBounds);
   [visualEl, stageEl, imgEl, videoEl, logoEl].forEach((el) => {
     if (el) overlayResizeObserver.observe(el);
@@ -307,16 +315,14 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
     });
   };
 
-  if (projects[0]?.mediaType === "image" && !imgEl.complete) {
-    const initialReady = imgEl.decode().then(() => true, () => false);
-    trackLoading(initialReady, 0);
-    void initialReady.then(() => {
-      if (!controller.signal.aborted && selectionVersion === 0) {
-        hideLoading();
-        syncOverlayBounds();
-      }
-    });
-  }
+  const initialEntrance = createProjectMediaEntrance({
+    element: visualEl,
+    getMedia: () => projects[0]?.mediaType === "video" ? videoEl : projects[0]?.hasComponent ? logoEl : imgEl,
+    signal: controller.signal,
+    reducedMotion: reducedMotion.matches,
+    onPending: (ready) => trackLoading(ready, 0),
+    onReady: () => { hideLoading(); syncOverlayBounds(); },
+  });
 
   // Duración del fade en ms — debe coincidir con duration-300 de Tailwind (300ms)
   const FADE_DURATION = 300;
@@ -350,6 +356,10 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
     // Si ya está seleccionado, no hacer nada
     if (el.classList.contains("font-semibold")) return;
     const version = ++selectionVersion;
+    initialEntrance.cancel();
+    selectionController.abort();
+    selectionController = new AbortController();
+    const selectionSignal = selectionController.signal;
     videos.unobserve(videoEl);
 
     // Cargar una imagen independiente para no conservar los píxeles anteriores.
@@ -412,7 +422,6 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
         overlayResizeObserver.unobserve(videoEl);
         videoEl.replaceWith(nextVideo);
         videoEl = nextVideo;
-        bindVideoRatio(videoEl);
         overlayResizeObserver.observe(videoEl);
         videos.observe(videoEl);
       } else if (loaded && nextImage) {
@@ -445,6 +454,13 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
       // Swap descripción
       descriptionEl.textContent = project.description;
 
+      if (project.mediaType === "video" && hasVisibleMedia) {
+        const ready = waitForProjectMedia(videoEl, {signal: selectionSignal, reducedMotion: reducedMotion.matches});
+        trackLoading(ready, version);
+        await ready;
+        if (controller.signal.aborted || version !== selectionVersion) return;
+      }
+
       // Fade in (se necesita un frame para que el navegador registre el cambio)
       fadeFrame = requestAnimationFrame(() => {
         if (controller.signal.aborted || version !== selectionVersion) return;
@@ -457,6 +473,7 @@ const viewProjectLabel = lang === "es" ? "Ver proyecto" : "View project";
   };
     cleanupProjects = () => {
       controller.abort();
+      selectionController.abort();
       overlayResizeObserver.disconnect();
       mediaFollow.disconnect();
       videos.disconnect();

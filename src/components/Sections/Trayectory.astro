@@ -140,72 +140,19 @@ const currentYear = String(new Date().getFullYear());
 </style>
 
 <script>
+  import {createTrajectoryHighlight} from '../../scripts/trajectory-hover';
+
   let cleanupTrajectory = () => {};
 
   function initializeTrajectory() {
     cleanupTrajectory();
-  const container = document.getElementById("trajectory-container");
-  const highlight = document.getElementById("hover-highlight");
-
-  if (container && highlight) {
-    const controller = new AbortController();
-    let currentItem = null;
-    let rafId = null;
-
-    const moveHighlight = (item) => {
-      if (!item) {
-        highlight.style.opacity = "0";
-        currentItem = null;
-        return;
-      }
-
-      const itemRect = item.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-
-      highlight.style.top = `${itemRect.top - containerRect.top}px`;
-      highlight.style.height = `${itemRect.height}px`;
-      highlight.style.opacity = "1";
-    };
-
-    container.addEventListener("mouseleave", () => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      rafId = null;
-      highlight.style.opacity = "0";
-      currentItem = null;
-    }, { signal: controller.signal });
-
-    container.addEventListener("mousemove", (e) => {
-      if (rafId) return;
-
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-
-        const items = container.querySelectorAll(".trajectory-item");
-        let target = null;
-
-        for (const item of items) {
-          const rect = item.getBoundingClientRect();
-          if (e.clientY >= rect.top && e.clientY <= rect.bottom) {
-            target = item;
-            break;
-          }
-        }
-
-        if (target !== currentItem) {
-          currentItem = target;
-          moveHighlight(target);
-        }
-      });
-    }, { signal: controller.signal });
-
-    cleanupTrajectory = () => {
-      controller.abort();
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      cleanupTrajectory = () => {};
-    };
-  }
+    const container = document.getElementById('trajectory-container');
+    const highlight = document.getElementById('hover-highlight');
+    if (!container || !highlight) return;
+    const tracker = createTrajectoryHighlight({container, highlight});
+    cleanupTrajectory = () => tracker.disconnect();
   }
 
-  document.addEventListener("astro:page-load", initializeTrajectory);
-  document.addEventListener("astro:before-swap", () => cleanupTrajectory());
+  document.addEventListener('astro:page-load', initializeTrajectory);
+  document.addEventListener('astro:before-swap', () => cleanupTrajectory());
 </script>
