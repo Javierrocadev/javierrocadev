@@ -7,6 +7,7 @@ interface Props {
 const {animate = true, compact = false} = Astro.props;
 ---
 <div
+          data-animate={animate ? 'true' : 'false'}
           class={`logocontainer h-full group relative rounded-2xl bg-[#214567] p-0.5 shadow-[0px_2px_5px_#e1e1e1] ${animate ? 'hover:shadow-md hover:scale-95 hover:rotate-2' : ''} transition-all duration-300`}
         >
           <div
@@ -202,18 +203,19 @@ const {animate = true, compact = false} = Astro.props;
   }
 
 
+  .logocontainer[data-animate="false"] .path {
+    animation: none;
+  }
+
   .dash-normal {
-    animation:
-      dashArray 7s ease-in-out infinite,
-      dashOffset 7s linear infinite;
+    stroke-dasharray: 140 220;
+    animation: dashOffset 7s linear infinite;
   }
 
 
   .dash-reverse {
-
-    animation:
-      dashArray 7s ease-in-out infinite,
-      dashOffsetReverse 7s linear infinite;
+    stroke-dasharray: 140 220;
+    animation: dashOffsetReverse 7s linear infinite;
   }
 
   @keyframes dashArray {

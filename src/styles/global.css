@@ -43,7 +43,6 @@
 }
 html {
   font-family: "Raleway", sans-serif;
-  scroll-behavior: smooth;
 }
 
 @media (max-width: 1023px) {
@@ -61,10 +60,9 @@ nav {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100dvh;
+  width: auto;
+  height: auto;
   pointer-events: none;
-  overflow: hidden;
   z-index: 90;
 }
 
@@ -169,20 +167,23 @@ nav {
 .menu-overlay {
   background-color: var(--menu-bg);
   clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
-  will-change: clip-path;
+}
+
+.menu-overlay:not(.is-open) .loader .path {
+  animation-play-state: paused;
 }
 
 .menu-overlay-content {
   display: flex;
   transform: translateY(-50%);
-  will-change: transform;
+  will-change: auto;
   pointer-events: all;
 }
 
 .menu-media-wrapper {
   flex: 2;
   opacity: 0;
-  will-change: opacity;
+  will-change: auto;
 }
 
 .menu-media-wrapper img {
@@ -335,15 +336,15 @@ nav {
 
     /* Normal direction (left to right) */
     .dash-normal {
-      animation: dashArray 7s ease-in-out infinite,
-                 dashOffset 7s linear infinite;
+      stroke-dasharray: 140 220;
+      animation: dashOffset 7s linear infinite;
     }
 
     /* Reversed direction (right to left) */
     .dash-reverse {
-       /* Different color for contrast */
-      animation: dashArray 7s ease-in-out infinite,
-                 dashOffsetReverse 7s linear infinite;
+      /* Different color for contrast */
+      stroke-dasharray: 140 220;
+      animation: dashOffsetReverse 7s linear infinite;
     }
     /* 
 .dash-normal {

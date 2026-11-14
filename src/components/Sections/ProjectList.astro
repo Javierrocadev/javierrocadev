@@ -1,5 +1,6 @@
 ---
 import {getProjects, getProjectCategories} from '../../lib/projects';
+import {getVideoPoster} from '../../lib/video-poster';
 import LogoCard from './LogoCard.astro';
 
 interface Props {
@@ -91,10 +92,11 @@ const labels = lang === 'es' ? {
           {project.mediaType === 'logo' ? (
             <div class="project-media project-logo"><LogoCard animate={false} compact /></div>
           ) : project.mediaType === 'video' && project.video ? (
-            <video class="project-media rounded-2xl" src={project.video}
-              poster={project.image?.src} aria-label={project.title} autoplay muted loop playsinline preload="metadata" />
+            <video class="project-media rounded-lg" data-src={project.video}
+              poster={getVideoPoster(project.image?.src)} aria-label={project.title}
+              width="1280" height="720" muted loop playsinline preload="none" />
           ) : project.image ? (
-            <img class="project-media rounded-2xl" src={project.image.src} alt={project.image.alt} loading="lazy" decoding="async" />
+            <img class="project-media rounded-lg" src={project.image.src} alt={project.image.alt} loading="lazy" decoding="async" />
           ) : null}
         </div>
       </article>
@@ -158,6 +160,11 @@ const labels = lang === 'es' ? {
     transition: transform 350ms ease, border-radius 350ms ease;
   }
   .project-logo { aspect-ratio: 16 / 9; }
+  video.project-media {
+    aspect-ratio: 16 / 9;
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    transform: translateZ(0);
+  }
   @media (min-width: 768px) {
     .project-row { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 3rem; }
     .project-media-space { height: 11rem; }
@@ -186,6 +193,8 @@ const labels = lang === 'es' ? {
 </style>
 
 <script>
+  import {createProjectVideos} from '../../scripts/project-videos';
+  import {createProjectRowAnimator} from '../../scripts/project-filter-animation';
   let cleanupProjectFilters = () => {};
 
   function initializeProjectFilters() {
@@ -202,37 +211,44 @@ const labels = lang === 'es' ? {
     }));
     const count = root.querySelector<HTMLElement>('[data-project-count]');
     const empty = root.querySelector<HTMLElement>('[data-project-empty]')!;
-    const selected = new Set<string>();
+    let selectedCategory: string | null = null;
     let featuredOnly = false;
 
-    function playVideo(video: HTMLVideoElement) {
-      if (controller.signal.aborted || video.closest<HTMLElement>('[data-project-row]')?.hidden) return;
-      video.muted = true;
-      void video.play().catch(() => {});
-    }
-
-    root.querySelectorAll('video').forEach((video) => {
-      video.muted = true;
-      video.defaultMuted = true;
-      video.addEventListener('canplay', () => playVideo(video), {signal: controller.signal});
-      // Reiniciar la carga tras insertar el vídeo mediante ClientRouter.
-      video.load();
+    const videos = createProjectVideos({maxConcurrent: 1});
+    rows.forEach(({element}) => {
+      const video = element.querySelector<HTMLVideoElement>('video');
+      if (!video) return;
+      videos.observe(video);
+      const activate = () => videos.prioritize(video);
+      element.addEventListener('pointerenter', activate, {signal: controller.signal});
+      element.addEventListener('focusin', activate, {signal: controller.signal});
     });
 
-    function updateProjects() {
+    const animator = createProjectRowAnimator({
+      durationMs: 900,
+      onStart(items) {
+        for (const {element, visible} of items) {
+          if (!visible) {
+            element.querySelectorAll('video').forEach((video) => video.pause());
+          }
+        }
+      },
+      onComplete() {
+        videos.refresh();
+      },
+    });
+
+    function updateProjects(animate = true) {
       let visibleCount = 0;
-      rows.forEach(({element, featured, categories}) => {
-        const visible = (!featuredOnly || featured) && (selected.size === 0 || categories.some((category) => selected.has(category)));
-        element.hidden = !visible;
+      const items = rows.map(({element, featured, categories}) => {
+        const visible = (!featuredOnly || featured) && (!selectedCategory || categories.includes(selectedCategory));
         if (visible) visibleCount++;
-        element.querySelectorAll('video').forEach((video) => {
-          if (visible) playVideo(video);
-          else video.pause();
-        });
+        return {element, visible};
       });
+      animator.applyVisibility(items, {animate});
       buttons.forEach((button) => {
         const category = button.dataset.projectFilter!;
-        button.setAttribute('aria-pressed', String(category ? selected.has(category) : selected.size === 0 && !featuredOnly));
+        button.setAttribute('aria-pressed', String(category ? selectedCategory === category : !selectedCategory && !featuredOnly));
       });
       featuredButton.setAttribute('aria-pressed', String(featuredOnly));
       if (count) count.textContent = `${visibleCount} ${visibleCount === 1 ? count.dataset.singular : count.dataset.plural}`;
@@ -242,22 +258,27 @@ const labels = lang === 'es' ? {
     buttons.forEach((button) => button.addEventListener('click', () => {
       const category = button.dataset.projectFilter!;
       if (!category) {
-        selected.clear();
+        selectedCategory = null;
+        featuredOnly = false;
+      } else if (selectedCategory === category) {
+        selectedCategory = null;
+      } else {
+        selectedCategory = category;
         featuredOnly = false;
       }
-      else if (selected.has(category)) selected.delete(category);
-      else selected.add(category);
-      updateProjects();
+      updateProjects(true);
     }, {signal: controller.signal}));
     featuredButton.addEventListener('click', () => {
       featuredOnly = !featuredOnly;
-      updateProjects();
+      if (featuredOnly) selectedCategory = null;
+      updateProjects(true);
     }, {signal: controller.signal});
 
-    updateProjects();
+    updateProjects(false);
     cleanupProjectFilters = () => {
       controller.abort();
-      root.querySelectorAll('video').forEach((video) => video.pause());
+      animator.disconnect();
+      videos.disconnect();
     };
   }
 

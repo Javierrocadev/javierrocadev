@@ -18,17 +18,42 @@ if (typeof document !== "undefined") {
         CustomEase.create("hop", ".87,0,.13,1");
       
         const lenis = new Lenis();
+        let lastInputAt = 0;
+        const kickRaf = () => {
+          lastInputAt = performance.now();
+          if (!rafId) rafId = requestAnimationFrame(raf);
+        };
         document.addEventListener("portfolio:back-to-top", () => {
+          kickRaf();
           lenis.scrollTo(0, {
             duration: 0.9,
             immediate: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
           });
         }, { signal: controller.signal });
+        document.addEventListener("click", (event) => {
+          const anchor = event.target.closest('a[href^="#"]');
+          if (!anchor) return;
+          const id = anchor.getAttribute("href");
+          const target = id && id.length > 1 ? document.querySelector(id) : null;
+          if (!target) return;
+          event.preventDefault();
+          kickRaf();
+          lenis.scrollTo(target, {
+            immediate: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+          });
+        }, { signal: controller.signal });
+        ["wheel", "touchstart", "touchmove", "scroll", "keydown"].forEach((evt) => {
+          window.addEventListener(evt, kickRaf, { passive: true, signal: controller.signal });
+        });
         function raf(time) {
           lenis.raf(time);
-          rafId = requestAnimationFrame(raf);
+          if (lenis.isScrolling || lenis.isTouching || performance.now() - lastInputAt < 220) {
+            rafId = requestAnimationFrame(raf);
+          } else {
+            rafId = 0;
+          }
         }
-        rafId = requestAnimationFrame(raf);
+        kickRaf();
       
         const textContainers = document.querySelectorAll(".menu-col");
         let splitTextByContainer = [];
@@ -125,6 +150,7 @@ if (typeof document !== "undefined") {
 
             isAnimating = false;
             isMenuOpen = false;
+            menuOverlay.classList.remove("is-open");
             lenis.start();
             onComplete?.();
           });
@@ -141,6 +167,7 @@ if (typeof document !== "undefined") {
       
           if (!isMenuOpen) {
             isAnimating = true;
+            menuOverlay.classList.add("is-open");
       
             lenis.stop();
       
@@ -229,6 +256,7 @@ if (typeof document !== "undefined") {
           gsap.set(menuMediaWrapper, { opacity: 0 });
           splitTextByContainer.flat().forEach(split => gsap.set(split.lines, { y: "-110%" }));
           hamburgerIcon.classList.remove("active");
+          menuOverlay.classList.remove("is-open");
           isMenuOpen = false;
           isAnimating = false;
           lenis.start();
