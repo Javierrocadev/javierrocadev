@@ -161,7 +161,7 @@ function createSlides(techArray) {
                     <a href="${tech.name}" target="_blank" rel="noreferrer noopener" class="w-full h-full flex flex-col items-center justify-center relative z-0">
                         
                         <div class="mb-3 w-auto h-auto flex items-center justify-center transition-all duration-300">
-                             <img src="${imageUrl}" alt="${tech.name}" class="w-full h-full rounded-xl object-contain group-hover:scale-[1.03] transition-transform duration-300" />
+                             <img src="${imageUrl}" alt="${tech.name}" loading="lazy" decoding="async" class="w-full h-full rounded-xl object-contain group-hover:scale-[1.03] transition-transform duration-300" />
                         </div>
                         
                         </a>
@@ -174,7 +174,17 @@ function createSlides(techArray) {
         sliderElement.innerHTML = createSlides(technologies);
 
         // --- Inicialización y Lógica de Marquee Continuo ---
-        var animation = { duration: 25000, easing: (t) => t }; 
+        const animation = { duration: 25000, easing: (t) => t };
+        let isCarouselVisible = false;
+
+        function startMarquee(s) {
+            if (!isCarouselVisible || document.hidden) return;
+            s.moveToIdx(s.track.details.abs + 5, true, animation);
+        }
+
+        function stopMarquee(s) {
+            s.animator.stop();
+        }
 
         const slider = new KeenSlider(
             sliderElement,
@@ -196,15 +206,42 @@ function createSlides(techArray) {
                 },
                 
                 created(s) {
-                    s.moveToIdx(s.track.details.abs + 5, true, animation);
+                    startMarquee(s);
                 },
                 updated(s) {
-                    s.moveToIdx(s.track.details.abs + 5, true, animation);
+                    startMarquee(s);
                 },
                 animationEnded(s) {
-                    s.moveToIdx(s.track.details.abs + 5, true, animation);
+                    startMarquee(s);
                 },
             }
+        );
+
+        const visibilityObserver = new IntersectionObserver(
+            (entries) => {
+                const entry = entries[0];
+                if (!entry) return;
+                isCarouselVisible = entry.isIntersecting;
+                if (isCarouselVisible && !document.hidden) {
+                    startMarquee(slider);
+                } else {
+                    stopMarquee(slider);
+                }
+            },
+            { threshold: 0.05 }
+        );
+        visibilityObserver.observe(sliderElement);
+
+        document.addEventListener(
+            "visibilitychange",
+            () => {
+                if (document.hidden) {
+                    stopMarquee(slider);
+                } else if (isCarouselVisible) {
+                    startMarquee(slider);
+                }
+            },
+            { signal: controller.signal }
         );
         
         // Lógica de navegación con botones 
@@ -221,6 +258,7 @@ function createSlides(techArray) {
 
         cleanupCarousel = () => {
             controller.abort();
+            visibilityObserver.disconnect();
             slider.destroy();
             cleanupCarousel = () => {};
         };
